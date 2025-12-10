@@ -1,1 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart City DAA Mini Projects – Set 2 (C++ Algorithm Logic)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            background: #f5f5f5;
+            color: #222;
+            line-height: 1.6;
+        }
+        header {
+            background: #111;
+            color: #fff;
+            padding: 20px 10px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+        header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 20px auto 40px;
+            padding: 0 15px;
+        }
+        .project {
+            background: #fff;
+            border-radius: 8px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .project h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #1a237e;
+        }
+        .project h3 {
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        .project p {
+            font-size: 14px;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        pre {
+            background: #111;
+            color: #eee;
+            padding: 10px 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            margin: 6px 0 8px;
+        }
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+        footer {
+            text-align: center;
+            padding: 15px 10px 30px;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Smart City – DAA Mini Projects (Set 2)</h1>
+    <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use</p>
+</header>
+
+<div class="container">
+
+    <!-- 1. Smart Pedestrian Crossing & Safety System -->
+    <section class="project" id="p11">
+        <h2>1. Smart Pedestrian Crossing &amp; Safety System</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Conventional pedestrian crossings depend entirely on fixed timers or manual buttons, causing
+            either long delays for pedestrians or sudden stops for vehicles. The system should adapt
+            crossing times based on pedestrian demand and traffic flow, while ensuring pedestrian safety
+            (no conflicting vehicle movement during crossing).
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct Crossing {
+    int id;
+    int waitingPedestrians;   // count of pedestrians waiting
+    bool pedPhaseActive;      // is pedestrian green ON
+    int vehFlow;              // approximate vehicles per minute
+};
+
+struct TimingConfig {
+    int minPedGreen;          // minimum green time for pedestrians
+    int maxPedGreen;          // maximum green time
+    int minGapBetweenPhases;  // safety gap in seconds
+};
+
+void updateCrossing(
+    Crossing &c,
+    const TimingConfig &cfg,
+    bool buttonPressed,
+    bool vehPhaseAllowed,
+    int currentTime,
+    int &pedGreenStartTime
+) {
+    // if new pedestrians arrive (button or sensor)
+    if (buttonPressed) {
+        c.waitingPedestrians++;
+    }
+
+    // start pedestrian phase if conditions allow
+    if (!c.pedPhaseActive && c.waitingPedestrians &gt; 0 && vehPhaseAllowed) {
+        c.pedPhaseActive = true;
+        pedGreenStartTime = currentTime;
+        // vehicles must be stopped now
+    }
+
+    // check if we should end pedestrian phase
+    if (c.pedPhaseActive) {
+        int elapsed = currentTime - pedGreenStartTime;
+        int dynamicGreen = cfg.minPedGreen;
+
+        // increase green time if many pedestrians and traffic is low
+        if (c.waitingPedestrians &gt; 5 && c.vehFlow &lt; 10) {
+            dynamicGreen = std::min(cfg.maxPedGreen, cfg.minPedGreen + 10);
+        }
+
+        if (elapsed &gt;= dynamicGreen) {
+            c.pedPhaseActive = false;
+            c.waitingPedestrians = 0;
+            // after this, enforce a safety gap before vehPhaseAllowed = true
+        }
+    }
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            Pedestrian push-buttons or vision sensors increment the waiting count at a crossing.
+            When vehicle traffic is in a safe gap, the system activates the pedestrian phase for a
+            dynamically computed interval. During this time, all conflicting vehicle directions are
+            held on red. At the end of the interval, signals return to vehicle phase with a safety
+            gap enforced between phases. This reduces pedestrian waiting time while maintaining safety.
+        </p>
+    </section>
+
+    <!-- 2. Real-Time Earthquake & Disaster Warning Network -->
+    <section class="project" id="p12">
+        <h2>2. Real-Time Earthquake &amp; Disaster Warning Network</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Earthquake shocks are detected first near the epicentre and travel outward. Many regions
+            receive destructive waves several seconds later, which can be used for early warning.
+            The system must collect readings from geo-distributed sensors, detect major events and
+            broadcast alerts to all connected regions as fast as possible.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct QuakeSensor {
+    int id;
+    int regionId;
+    double pga;          // peak ground acceleration
+    long long timestamp; // detection time
+};
+
+// Region graph for alert propagation
+using RegionGraph = std::vector&lt;std::vector&lt;int&gt;&gt;; // adjacency list
+
+// BFS over region graph to propagate alerts
+std::vector&lt;int&gt; propagateAlert(
+    int sourceRegion,
+    const RegionGraph &g
+) {
+    int n = g.size();
+    std::vector&lt;bool&gt; visited(n, false);
+    std::queue&lt;int&gt; q;
+    std::vector&lt;int&gt; order;
+
+    visited[sourceRegion] = true;
+    q.push(sourceRegion);
+
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        order.push_back(u);
+        for (int v : g[u]) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+    }
+    return order;  // alert sequence by region
+}
+
+bool isSignificantEvent(const std::vector&lt;QuakeSensor&gt; &data, double threshold) {
+    int count = 0;
+    for (const auto &s : data) {
+        if (s.pga &gt;= threshold) count++;
+    }
+    return count &gt;= 3; // for example: at least 3 sensors above threshold
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            Sensor nodes send ground motion data to a central server. If enough sensors report values
+            above a threshold (significant earthquake), the nearest region to the epicentre is identified
+            and used as the source for BFS on the region graph. All reachable regions receive alerts in
+            BFS order, approximating minimal communication hops. These alerts can activate sirens, mobile
+            notifications and automatic system shutdowns (e.g., trains, gas lines).
+        </p>
+    </section>
+
+    <!-- 3. Smart Public Bicycle Sharing System -->
+    <section class="project" id="p13">
+        <h2>3. Smart Public Bicycle Sharing System</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Public bicycle systems require efficient management of station capacities and bicycle availability.
+            Users should quickly find nearby stations with free bicycles or empty docks. The system must track
+            real-time counts and suggest the best stations based on location and availability.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct Station {
+    int id;
+    double x, y;      // coordinates
+    int bikes;        // current bikes
+    int capacity;     // docking capacity
+};
+
+double distance(double x1, double y1, double x2, double y2) {
+    double dx = x1 - x2;
+    double dy = y1 - y2;
+    return std::sqrt(dx * dx + dy * dy);
+}
+
+// Find nearest station with at least 1 bike available
+int findNearestStationWithBike(
+    double userX,
+    double userY,
+    const std::vector&lt;Station&gt; &stations
+) {
+    int bestId = -1;
+    double bestDist = 1e18;
+
+    for (const auto &s : stations) {
+        if (s.bikes &lt;= 0) continue; // no bike available
+        double d = distance(userX, userY, s.x, s.y);
+        if (d &lt; bestDist) {
+            bestDist = d;
+            bestId = s.id;
+        }
+    }
+    return bestId;
+}
+
+// Find nearest station with empty dock for return
+int findNearestStationWithDock(
+    double userX,
+    double userY,
+    const std::vector&lt;Station&gt; &stations
+) {
+    int bestId = -1;
+    double bestDist = 1e18;
+
+    for (const auto &s : stations) {
+        if (s.bikes &gt;= s.capacity) continue; // full station
+        double d = distance(userX, userY, s.x, s.y);
+        if (d &lt; bestDist) {
+            bestDist = d;
+            bestId = s.id;
+        }
+    }
+    return bestId;
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            Each station regularly updates the server with the current number of bicycles and total capacity.
+            When a user wants to pick up a bike, the nearest station with at least one available bike is computed.
+            Similarly, for returns, the nearest station with a free dock is suggested. Station utilisation data can
+            also be used for rebalancing bicycles between stations during off-peak hours.
+        </p>
+    </section>
+
+    <!-- 4. Citywide CCTV & Crime Analytics Platform -->
+    <section class="project" id="p14">
+        <h2>4. Citywide CCTV &amp; Crime Analytics Platform</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Cities deploy thousands of CCTV cameras, but manual monitoring is impossible at scale.
+            The system must store event metadata (e.g., suspicious activity detections), aggregate by
+            time and region, and detect crime hotspots and patterns for law enforcement analytics.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct CrimeEvent {
+    long long timestamp; // epoch seconds
+    int regionId;
+    int cameraId;
+    std::string type;    // e.g. "theft", "violence", ...
+};
+
+using EventList = std::vector&lt;CrimeEvent&gt;;
+using RegionCount = std::unordered_map&lt;int, int&gt;; // regionId -&gt; event count
+
+// Count events per region in a time window [startT, endT]
+RegionCount countEventsByRegion(
+    const EventList &events,
+    long long startT,
+    long long endT
+) {
+    RegionCount rc;
+    for (const auto &e : events) {
+        if (e.timestamp &lt; startT || e.timestamp &gt; endT) continue;
+        rc[e.regionId]++;
+    }
+    return rc;
+}
+
+// Find regions with counts &gt;= threshold (hotspots)
+std::vector&lt;int&gt; findHotspots(
+    const RegionCount &rc,
+    int threshold
+) {
+    std::vector&lt;int&gt; hotspots;
+    for (const auto &p : rc) {
+        if (p.second &gt;= threshold) {
+            hotspots.push_back(p.first);
+        }
+    }
+    return hotspots;
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            AI models running on camera feeds detect and tag events with region IDs and timestamps.
+            These events are appended to an event list. Analytics queries (for a given week or month)
+            aggregate counts per region; regions exceeding a threshold are marked as hotspots. This
+            allows police to allocate more patrols, cameras, or lighting in those zones, and analyse
+            how crime patterns change over time.
+        </p>
+    </section>
+
+    <!-- 5. Intelligent Water Distribution & Pressure Control -->
+    <section class="project" id="p15">
+        <h2>5. Intelligent Water Distribution &amp; Pressure Control</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Water networks must supply sufficient pressure to all zones without causing pipe bursts or
+            wastage. Traditional manual valve settings cannot adapt to varying demand. The system should
+            monitor pressure at nodes and adjust valve openings to keep pressures within safe bounds.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct NodePressure {
+    int nodeId;
+    double pressure;   // in bar
+};
+
+struct Valve {
+    int id;
+    int fromNode;
+    int toNode;
+    double opening;    // 0.0 (closed) to 1.0 (fully open)
+};
+
+void adjustValves(
+    std::vector&lt;NodePressure&gt; &nodes,
+    std::vector&lt;Valve&gt; &valves,
+    double minPressure,
+    double maxPressure
+) {
+    // naive proportional control example:
+    for (auto &v : valves) {
+        double pf = 0.0, pt = 0.0;
+        for (auto &n : nodes) {
+            if (n.nodeId == v.fromNode) pf = n.pressure;
+            if (n.nodeId == v.toNode)   pt = n.pressure;
+        }
+
+        // if downstream is under-pressure, open more
+        if (pt &lt; minPressure) {
+            v.opening = std::min(1.0, v.opening + 0.1);
+        }
+        // if downstream is over-pressure, close slightly
+        else if (pt &gt; maxPressure) {
+            v.opening = std::max(0.0, v.opening - 0.1);
+        }
+        // else keep opening unchanged
+    }
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            Pressure sensors across the water network send real-time values. The control algorithm
+            compares each node’s pressure against desired thresholds and makes small adjustments to
+            valve openings to normalize pressures gradually. Over multiple iterations, this stabilises
+            pressures across the network, improving reliability and reducing leaks or bursts.
+        </p>
+    </section>
+
+    <!-- 6. Smart Solar Rooftop Monitoring System -->
+    <section class="project" id="p16">
+        <h2>6. Smart Solar Rooftop Monitoring System</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Solar rooftop installations may degrade, get shaded, or fail partially without immediate
+            detection, reducing energy generation. The system must monitor each panel/string’s output,
+            compare it with expected generation and flag underperforming units.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct PanelData {
+    int panelId;
+    double currentPower;   // in Watts
+    double expectedPower;  // in Watts based on irradiance
+};
+
+struct PanelAlert {
+    int panelId;
+    double efficiency;     // currentPower / expectedPower
+};
+
+std::vector&lt;PanelAlert&gt; detectUnderperformingPanels(
+    const std::vector&lt;PanelData&gt; &panels,
+    double efficiencyThreshold
+) {
+    std::vector&lt;PanelAlert&gt; alerts;
+    for (const auto &p : panels) {
+        if (p.expectedPower &lt;= 0.0) continue;
+        double eff = p.currentPower / p.expectedPower;
+        if (eff &lt;= efficiencyThreshold) {
+            alerts.push_back({p.panelId, eff});
+        }
+    }
+    return alerts;
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            Panel-wise power measurements and irradiance data (sun intensity) are used to estimate expected
+            generation. Each panel’s actual-to-expected ratio is computed; panels that fall below a threshold
+            are flagged as underperforming. Maintenance teams can then inspect for dirt, shading, or hardware
+            faults. Historical data also helps forecast energy production and ROI for the rooftop plants.
+        </p>
+    </section>
+
+    <!-- 7. Urban Green Roof & Vertical Farming Initiative -->
+    <section class="project" id="p17">
+        <h2>7. Urban Green Roof &amp; Vertical Farming Initiative</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Green roofs and vertical farms require precise control of irrigation and environmental conditions.
+            Over-watering wastes resources; under-watering harms plants. The system should monitor soil moisture,
+            schedule irrigation, and maintain optimal growing conditions.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct PlantBed {
+    int id;
+    double moisture;        // current soil moisture
+    double minMoisture;     // lower threshold
+    double maxMoisture;     // upper threshold
+    bool irrigationOn;
+};
+
+void controlIrrigation(std::vector&lt;PlantBed&gt; &beds) {
+    for (auto &b : beds) {
+        if (b.moisture &lt; b.minMoisture) {
+            b.irrigationOn = true;   // start watering
+        } else if (b.moisture &gt; b.maxMoisture) {
+            b.irrigationOn = false;  // stop watering
+        }
+        // within the band, keep current state
+    }
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            Moisture sensors in plant beds feed readings into the control system. For each bed, irrigation is
+            turned ON if moisture falls below the minimum target and turned OFF when it exceeds the upper limit.
+            This simple hysteresis-based control avoids frequent switching. Additional sensors (light, temperature)
+            can be integrated for more advanced control and productivity analytics of rooftop and vertical farms.
+        </p>
+    </section>
+
+    <!-- 8. Smart Tourism & Digital Heritage Guide -->
+    <section class="project" id="p18">
+        <h2>8. Smart Tourism &amp; Digital Heritage Guide</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Tourists often visit a city without optimal planning, wasting time and missing key points of interest.
+            The system should recommend an efficient route that covers selected attractions based on tourist
+            preferences and time constraints, similar to a shortest-path sightseeing planner.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct POI {
+    int id;
+    std::string name;
+    double x, y;  // coordinates
+    int priority; // tourist interest level
+};
+
+double dist(double x1, double y1, double x2, double y2) {
+    double dx = x1 - x2;
+    double dy = y1 - y2;
+    return std::sqrt(dx*dx + dy*dy);
+}
+
+// Greedy route: from current POI, go to nearest unvisited POI
+std::vector&lt;int&gt; buildTourRoute(
+    int startId,
+    const std::vector&lt;POI&gt; &pois
+) {
+    int n = pois.size();
+    std::vector&lt;bool&gt; visited(n, false);
+    std::vector&lt;int&gt; route;
+    int currentIdx = startId;
+    visited[currentIdx] = true;
+    route.push_back(pois[currentIdx].id);
+
+    for (int step = 1; step &lt; n; ++step) {
+        int nextIdx = -1;
+        double best = 1e18;
+        for (int i = 0; i &lt; n; ++i) {
+            if (visited[i]) continue;
+            double d = dist(pois[currentIdx].x, pois[currentIdx].y,
+                            pois[i].x, pois[i].y);
+            if (d &lt; best) {
+                best = d;
+                nextIdx = i;
+            }
+        }
+        if (nextIdx == -1) break;
+        visited[nextIdx] = true;
+        route.push_back(pois[nextIdx].id);
+        currentIdx = nextIdx;
+    }
+    return route;
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            The city’s attractions are stored with coordinates and interest scores. Based on a tourist’s
+            starting point and selected POIs, the system constructs a route that greedily visits the nearest
+            unvisited attraction, reducing backtracking and travel time. The route is then shown on a map,
+            and multimedia content can be provided at each stop, including AR/VR heritage experiences.
+        </p>
+    </section>
+
+    <!-- 9. AI-Based Traffic Violation Detection System -->
+    <section class="project" id="p19">
+        <h2>9. AI-Based Traffic Violation Detection System</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Manual detection of traffic violations (red-light jump, overspeeding, no-helmet, wrong-lane) is
+            inefficient and often missed. An AI-assisted system must log detected violations from cameras,
+            aggregate them and support quick search and analytics for enforcement.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct Violation {
+    long long timestamp;
+    std::string vehicleNumber;
+    std::string type;   // "RED_LIGHT", "NO_HELMET", etc.
+    int locationId;
+};
+
+using ViolationList = std::vector&lt;Violation&gt;;
+using VehicleViolations = std::unordered_map&lt;std::string, int&gt;; // vehicle -&gt; count
+
+// Count total violations for each vehicle
+VehicleViolations countByVehicle(const ViolationList &vlist) {
+    VehicleViolations counts;
+    for (const auto &v : vlist) {
+        counts[v.vehicleNumber]++;
+    }
+    return counts;
+}
+
+// Filter violations of a given type within time window
+ViolationList filterViolations(
+    const ViolationList &vlist,
+    const std::string &typeFilter,
+    long long startT,
+    long long endT
+) {
+    ViolationList result;
+    for (const auto &v : vlist) {
+        if (v.type != typeFilter) continue;
+        if (v.timestamp &lt; startT || v.timestamp &gt; endT) continue;
+        result.push_back(v);
+    }
+    return result;
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            AI models on roadside cameras identify violations and push structured records to the backend.
+            These records are stored and can be queried by vehicle number, type, time window or location.
+            Vehicles with repeated violations can be automatically flagged for legal action, and hotspot
+            areas with frequent offenses can be targeted for stricter enforcement or road design changes.
+        </p>
+    </section>
+
+    <!-- 10. Smart Building Energy Management System -->
+    <section class="project" id="p20">
+        <h2>10. Smart Building Energy Management System</h2>
+
+        <h3>Problem Statement</h3>
+        <p>
+            Modern buildings have multiple zones (offices, corridors, meeting rooms) with different
+            energy loads and occupancy levels. The system must monitor energy consumption per zone
+            and perform load shedding or optimization when total consumption exceeds a threshold,
+            while minimizing comfort loss.
+        </p>
+
+        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+        <pre><code>struct Zone {
+    int id;
+    std::string name;
+    double currentLoad;     // kW
+    double priority;        // 0.0 low (can shed) to 1.0 high (critical)
+    bool nonCriticalLoadOn; // e.g. decorative lighting, extra AC
+};
+
+double computeTotalLoad(const std::vector&lt;Zone&gt; &zones) {
+    double sum = 0.0;
+    for (const auto &z : zones) {
+        sum += z.currentLoad;
+    }
+    return sum;
+}
+
+// Shed non-critical loads in low priority zones until below threshold
+void performLoadShedding(
+    std::vector&lt;Zone&gt; &zones,
+    double maxAllowedLoad
+) {
+    // sort zones by ascending priority (shed lowest first)
+    std::sort(zones.begin(), zones.end(),
+              [](const Zone &a, const Zone &b) {
+                  return a.priority &lt; b.priority;
+              });
+
+    for (auto &z : zones) {
+        double total = computeTotalLoad(zones);
+        if (total &lt;= maxAllowedLoad) break;
+
+        if (z.nonCriticalLoadOn && z.priority &lt; 0.7) {
+            // turn off non-critical loads
+            z.nonCriticalLoadOn = false;
+            // approximate reduction; real system calculates exact impact
+            z.currentLoad *= 0.8;
+        }
+    }
+}</code></pre>
+
+        <h3>Application Logic</h3>
+        <p>
+            Smart meters track real-time power usage per zone. When total building consumption approaches
+            a configured limit (e.g., contracted demand), the management system gradually switches off
+            non-essential loads in lower-priority zones. This keeps the total load under the threshold,
+            avoids penalties, and still maintains acceptable comfort in high-priority zones such as server
+            rooms, ICUs, or critical offices.
+        </p>
+    </section>
+
+</div>
+
+<footer>
+    Smart City DAA Mini Projects – Set 2 · C++ Algorithmic Design · Generated Template
+</footer>
+
+</body>
+</html>
 
