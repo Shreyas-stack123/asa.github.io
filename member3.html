@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>ARYAN - Smart City Projects — Full Restyled</title>
+    <title>SHREYAS - Smart City Projects — Full (10 Projects)</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
         :root{
@@ -37,8 +37,8 @@
 
         .container{max-width:1200px;margin:36px auto;padding:0 20px 80px}
         .project{background:var(--bg-card);border-radius:14px;padding:28px;margin-bottom:26px;border:1px solid var(--border);box-shadow:0 12px 40px var(--shadow);transition:transform .28s,box-shadow .28s,border-color .28s;opacity:0;animation:slideIn .6s ease-out forwards}
-        .project:nth-child(1){animation-delay:.08s}.project:nth-child(2){animation-delay:.12s}.project:nth-child(3){animation-delay:.16s}.project:nth-child(4){animation-delay:.20s}.project:nth-child(5){animation-delay:.24s}.project:nth-child(6){animation-delay:.28s}.project:nth-child(7){animation-delay:.32s}.project:nth-child(8){animation-delay:.36s}.project:nth-child(9){animation-delay:.40s}.project:nth-child(10){animation-delay:.44s}
-        @keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .project:nth-child(1){animation-delay:.06s}.project:nth-child(2){animation-delay:.10s}.project:nth-child(3){animation-delay:.14s}.project:nth-child(4){animation-delay:.18s}.project:nth-child(5){animation-delay:.22s}.project:nth-child(6){animation-delay:.26s}.project:nth-child(7){animation-delay:.30s}.project:nth-child(8){animation-delay:.34s}.project:nth-child(9){animation-delay:.38s}.project:nth-child(10){animation-delay:.42s}
+        @keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
         .project:hover{transform:translateY(-8px);box-shadow:0 26px 60px var(--accent-glow);border-color:var(--accent)}
 
         .project h2{color:var(--accent);font-size:clamp(18px,2.6vw,26px);margin-bottom:12px;font-weight:700;display:inline-block}
@@ -72,16 +72,412 @@
     </button>
 
     <header>
-        <h1>SHREYAS — Smart City Projects</h1>
+        <h1>Smart City – DAA Mini Project Collection (10)</h1>
         <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use</p>
     </header>
 
     <main class="container">
 
-        <!-- Project sections (kept content identical to user) -->
-        <!-- 1..7 omitted here for brevity inside canvas doc but included in file -->
+        <!-- 1. Smart Traffic Signal Optimization System -->
+        <section class="project" id="proj1">
+            <h2>1. Smart Traffic Signal Optimization System</h2>
 
-        <section class="project" id="proj_fire">
+            <h3>Problem Statement</h3>
+            <p>
+                Fixed-time traffic lights cause long queues on busy approaches and waste green time on empty roads.
+                The system should dynamically adjust signal timings at junctions based on real-time vehicle density
+                to minimize total waiting time and congestion.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>// Each junction and its incoming roads
+struct Intersection {
+    int id;
+    std::vector&lt;int&gt; incomingRoadIds;
+};
+
+// Live vehicle count for each road
+struct RoadLoad {
+    int roadId;
+    int vehicleCount;
+};
+
+// intersectionId -> list of (roadId, greenTimeInSeconds)
+using SignalPlan = std::unordered_map&lt;int, std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;
+
+// trafficMap: roadId -> RoadLoad
+void computeSignalPlan(
+    const Intersection &inter,
+    const std::unordered_map&lt;int, RoadLoad&gt; &trafficMap,
+    int cycleTime,
+    int minGreen,
+    SignalPlan &plan
+) {
+    int total = 0;
+    for (int rid : inter.incomingRoadIds) {
+        auto it = trafficMap.find(rid);
+        int count = (it == trafficMap.end() ? 1 : std::max(it-&gt;second.vehicleCount, 1));
+        total += count;
+    }
+
+    std::vector&lt;std::pair&lt;int,int&gt;&gt; phases;
+    for (int rid : inter.incomingRoadIds) {
+        auto it = trafficMap.find(rid);
+        int count = (it == trafficMap.end() ? 1 : std::max(it-&gt;second.vehicleCount, 1));
+        double share = (double)count / total;
+        int green = std::max(minGreen, (int)(share * cycleTime));
+        phases.push_back({rid, green});
+    }
+    plan[inter.id] = phases;
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                Sensors or cameras count vehicles on each incoming road. For every cycle, the controller gathers these
+                counts and runs the above logic to compute green time for each approach. The updated signal plan is sent
+                to the junction controller, which changes phase durations accordingly, reducing average waiting time and
+                improving throughput at busy intersections.
+            </p>
+        </section>
+
+        <!-- 2. Smart Street Lighting Automation -->
+        <section class="project" id="proj2">
+            <h2>2. Smart Street Lighting Automation</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Street lights often remain ON at full power all night, even when no pedestrians or vehicles are present,
+                resulting in high energy wastage. The system should automatically control ON/OFF state and brightness
+                using ambient light and motion detection.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct LightPole {
+    int id;
+    bool isOn;
+    int brightness;          // 0 to 100
+    std::time_t lastMotion;  // last motion detected time
+};
+
+// O(1) access for each pole by ID
+using PoleMap = std::unordered_map&lt;int, LightPole&gt;;
+
+void updatePoleState(
+    LightPole &pole,
+    bool isNight,
+    bool motionDetected,
+    int dimTimeoutSeconds
+) {
+    std::time_t now = std::time(nullptr);
+
+    if (!isNight) {
+        pole.isOn = false;
+        pole.brightness = 0;
+        return;
+    }
+
+    if (motionDetected) {
+        pole.lastMotion = now;
+        pole.isOn = true;
+        pole.brightness = 100;    // full brightness when motion
+    } else {
+        double diff = std::difftime(now, pole.lastMotion);
+        if (diff &gt; dimTimeoutSeconds) {
+            pole.isOn = true;
+            pole.brightness = 30; // dim mode
+        }
+    }
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                A light sensor determines whether it is night or day. Motion sensors (PIR/IR) near each pole
+                trigger updates for that pole. At night, the lamp turns to full brightness when motion is
+                detected and then returns to dim mode after a timeout period without motion. During daytime
+                all lamps stay OFF. This achieves significant energy savings while retaining safety.
+            </p>
+        </section>
+
+        <!-- 3. Intelligent Waste Collection & Routing System -->
+        <section class="project" id="proj3">
+            <h2>3. Intelligent Waste Collection & Routing System</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Garbage trucks follow fixed routes regardless of bin fill levels, causing some bins to overflow
+                and others to be collected half-empty. The system should monitor bin fullness and generate efficient
+                collection routes only for bins that actually need pickup.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct SmartBin {
+    int id;
+    int node;          // graph node index
+    double fillLevel;  // 0.0 – 1.0
+};
+
+// adjacency list: graph[u] = list of (v, distance)
+using Graph = std::vector&lt;std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;
+
+std::vector&lt;int&gt; dijkstra(int start, const Graph &graph) {
+    const int INF = 1e9;
+    int n = graph.size();
+    std::vector&lt;int&gt; dist(n, INF);
+    dist[start] = 0;
+    std::priority_queue&lt;std::pair&lt;int,int&gt;,
+                        std::vector&lt;std::pair&lt;int,int&gt;&gt;,
+                        std::greater&lt;std::pair&lt;int,int&gt;&gt;&gt; pq;
+    pq.push({0, start});
+    while (!pq.empty()) {
+        auto [d, u] = pq.top(); pq.pop();
+        if (d != dist[u]) continue;
+        for (auto [v, w] : graph[u]) {
+            if (dist[v] &gt; d + w) {
+                dist[v] = d + w;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+    return dist;
+}
+
+// Greedy route: always go to nearest unvisited "ready" bin
+std::vector&lt;int&gt; planRouteGreedy(
+    int depotNode,
+    const std::vector&lt;SmartBin&gt; &bins,
+    const Graph &graph,
+    double fillThreshold
+) {
+    std::vector&lt;bool&gt; selected(bins.size(), false);
+    std::vector&lt;int&gt; route;
+    int currentNode = depotNode;
+
+    while (true) {
+        int bestIdx = -1;
+        int bestDist = 1e9;
+
+        for (int i = 0; i &lt; (int)bins.size(); ++i) {
+            if (selected[i] || bins[i].fillLevel &lt; fillThreshold) continue;
+            // recompute shortest path from currentNode to bin node
+            auto dist = dijkstra(currentNode, graph);
+            if (dist[bins[i].node] &lt; bestDist) {
+                bestDist = dist[bins[i].node];
+                bestIdx = i;
+            }
+        }
+
+        if (bestIdx == -1) break;
+        selected[bestIdx] = true;
+        route.push_back(bins[bestIdx].id);
+        currentNode = bins[bestIdx].node;
+    }
+    return route;
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                Smart bins periodically send their fill levels to a central server. Bins crossing a configured
+                threshold (for example 80%) are marked as "ready for pickup". Using the street graph, the system
+                runs Dijkstra to estimate travel distances and greedily chooses the next nearest ready bin,
+                generating an ordered route for each truck. This reduces fuel cost, time, and bin overflow.
+            </p>
+        </section>
+
+        <!-- 4. Citywide Air Quality Monitoring Network -->
+        <section class="project" id="proj4">
+            <h2>4. Citywide Air Quality Monitoring Network</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Air quality varies across different parts of the city. Without continuous monitoring, it is hard
+                to identify pollution hotspots. The system must collect AQI data from distributed sensors, maintain
+                a live pollution map, and trigger alerts when safe limits are exceeded.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>// City is represented as a grid of cells (i, j)
+using AQGrid = std::vector&lt;std::vector&lt;int&gt;&gt;; // AQI values
+
+struct AQReading {
+    int sensorId;
+    int gridX, gridY;
+    int aqi;
+};
+
+struct AQAlert {
+    int gridX, gridY;
+    int aqi;
+    long long timestamp;
+};
+
+void updateGridAndAlerts(
+    AQGrid &grid,
+    const std::vector&lt;AQReading&gt; &readings,
+    int threshold,
+    std::vector&lt;AQAlert&gt; &alerts,
+    long long currentTime
+) {
+    for (const auto &r : readings) {
+        grid[r.gridX][r.gridY] = r.aqi;
+        if (r.aqi &gt;= threshold) {
+            AQAlert a{r.gridX, r.gridY, r.aqi, currentTime};
+            alerts.push_back(a);
+        }
+    }
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                Each air-quality sensor maps its position to a grid cell and periodically sends AQI values.
+                The grid is updated and any cell crossing a critical threshold generates an alert entry.
+                A web dashboard can visualise the grid as a heatmap, and authorities can focus on highly
+                polluted cells for mitigation like traffic restrictions, green buffers, or industrial checks.
+            </p>
+        </section>
+
+        <!-- 5. Flood Prediction & Smart Drainage System -->
+        <section class="project" id="proj5">
+            <h2>5. Flood Prediction & Smart Drainage System</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Low-lying regions in cities face sudden flooding due to heavy rainfall and clogged drains.
+                Manual monitoring is slow and reactive. The system must analyse water-level and rainfall data
+                to compute flood risk for each zone and trigger early warnings or drainage actions.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct ZoneData {
+    int zoneId;
+    double rainfall;     // recent rainfall in mm
+    double waterLevel;   // current water level in cm
+    double elevation;    // elevation (higher => safer)
+};
+
+double computeRiskScore(const ZoneData &z) {
+    double rRain  = z.rainfall;
+    double rWater = z.waterLevel;
+    double rElev  = std::max(0.0, 100.0 - z.elevation);
+    return 0.4 * rRain + 0.4 * rWater + 0.2 * rElev;
+}
+
+void evaluateZones(
+    const std::vector&lt;ZoneData&gt; &zones,
+    double alertThreshold,
+    std::vector&lt;std::pair&lt;int,double&gt;&gt; &riskyZones
+) {
+    for (const auto &z : zones) {
+        double score = computeRiskScore(z);
+        if (score &gt;= alertThreshold) {
+            riskyZones.push_back({z.zoneId, score});
+        }
+    }
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                Rain gauges and water-level sensors feed data into a central controller. Each zone is assigned
+                a flood risk score using rainfall, current water level, and elevation. If the risk crosses a
+                defined threshold, the zone is marked as "at risk". This can automatically open pumps or sluice
+                gates, send alerts to residents, and inform disaster management teams for proactive measures.
+            </p>
+        </section>
+
+        <!-- 6. Smart Health Kiosk & Telemedicine Booth -->
+        <section class="project" id="proj6">
+            <h2>6. Smart Health Kiosk & Telemedicine Booth</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                In remote or crowded urban areas, patients suffer long waiting times and limited doctor access.
+                A smart health kiosk should capture vital signs, assign triage priorities, and connect patients
+                to remote doctors, ensuring critical cases are treated first.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Patient {
+    int id;
+    std::string name;
+    int priority;      // higher = more urgent
+    long long arrival; // timestamp
+};
+
+struct PatientCmp {
+    bool operator()(const Patient &a, const Patient &b) const {
+        if (a.priority == b.priority)
+            return a.arrival &gt; b.arrival; // earlier arrival first
+        return a.priority &lt; b.priority;   // max-heap by priority
+    }
+};
+
+using PatientQueue =
+    std::priority_queue&lt;Patient, std::vector&lt;Patient&gt;, PatientCmp&gt;;
+
+void addPatient(PatientQueue &pq, int id, const std::string &name, int priority, long long now) {
+    Patient p{id, name, priority, now};
+    pq.push(p);
+}
+
+Patient getNextPatient(PatientQueue &pq) {
+    Patient p = pq.top();
+    pq.pop();
+    return p;
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                The kiosk records vitals such as heart rate, temperature, SpO₂, and basic symptoms. A simple triage
+                algorithm assigns a priority score based on abnormal values. Patients are stored in a priority queue,
+                and the doctor console always pulls the highest-priority (most critical) patient next. This ensures
+                emergency cases receive timely teleconsultation while routine cases wait in order.
+            </p>
+        </section>
+
+        <!-- 7. Smart Energy Billing & Analytics Platform -->
+        <section class="project" id="proj7">
+            <h2>7. Smart Energy Billing & Analytics Platform</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Traditional billing is based on monthly manual meter readings, which is slow and unable to support
+                dynamic tariffs. The system should read smart meters frequently, compute bills using slab-based
+                tariffs, and generate analytics on consumption patterns.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct TariffSlab {
+    double unitsLimit;  // max units allowed in this slab
+    double rate;        // price per unit
+};
+
+double computeBill(double units, const std::vector&lt;TariffSlab&gt; &slabs) {
+    double cost = 0.0;
+    double remaining = units;
+
+    for (size_t i = 0; i &lt; slabs.size() && remaining &gt; 0; ++i) {
+        double use = std::min(remaining, slabs[i].unitsLimit);
+        cost += use * slabs[i].rate;
+        remaining -= use;
+    }
+
+    // units beyond last slab charged at last rate
+    if (remaining &gt; 0 && !slabs.empty()) {
+        cost += remaining * slabs.back().rate;
+    }
+    return cost;
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                Smart meters periodically send energy usage to the backend. The system aggregates units consumed
+                in a billing period and applies slab-based tariffs via the above function. Bills are generated,
+                stored, and shared with consumers. Over time, the accumulated data can be analysed to detect
+                heavy users, peak hours, and opportunities for energy-saving programs or dynamic pricing.
+            </p>
+        </section>
+
+        <!-- 8. Intelligent Building Fire Safety System (completed) -->
+        <section class="project" id="proj8">
             <h2>8. Intelligent Building Fire Safety System</h2>
 
             <h3>Problem Statement</h3>
@@ -163,6 +559,7 @@ std::vector&lt;int&gt; buildPath(int target, const std::vector&lt;int&gt; &paren
             </p>
         </section>
 
+        <!-- 9. EV Charging Network with Reservation System -->
         <section class="project" id="proj9">
             <h2>9. EV Charging Network with Reservation System</h2>
 
@@ -217,6 +614,7 @@ bool reserveSlot(
             </p>
         </section>
 
+        <!-- 10. Smart School Campus Management System -->
         <section class="project" id="proj10">
             <h2>10. Smart School Campus Management System</h2>
 
