@@ -1,199 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASA City – City Building Project</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <title>ASA City – SHREYAS Theme</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light">
+  <style>
+    :root{
+      --bg-primary:#0a0e27;
+      --bg-secondary:#1a1f3a;
+      --bg-card:#252b48;
+      --text-primary:#e4e6eb;
+      --text-secondary:#b8bcc8;
+      --accent:#00d4ff;
+      --accent-2:#00ffaa;
+      --accent-glow:rgba(0,212,255,0.18);
+      --border:rgba(255,255,255,0.06);
+      --shadow:rgba(0,0,0,0.5);
+      --glass: rgba(255,255,255,0.02);
+      --max-width:1200px;
+      --radius:14px;
+    }
+
+    /* light theme overrides */
+    body.light-mode {
+      --bg-primary:#f0f2f5;
+      --bg-secondary:#ffffff;
+      --bg-card:#ffffff;
+      --text-primary:#1c1e21;
+      --text-secondary:#606770;
+      --accent:#0066ff;
+      --accent-glow:rgba(0,102,255,0.12);
+      --border:rgba(0,0,0,0.08);
+      --shadow:rgba(0,0,0,0.08);
+      --glass: rgba(0,0,0,0.02);
+    }
+
+    /* base reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg-primary);
+      color:var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition: background .25s ease, color .25s ease;
+      overflow-x:hidden;
+    }
+
+    /* animated background */
+    .bg-animation{
+      position:fixed; inset:0; z-index:-1;
+      background:
+        radial-gradient(circle at 18% 35%, var(--accent) 0, transparent 35%),
+        radial-gradient(circle at 82% 75%, var(--accent-2) 0, transparent 36%);
+      opacity:0.04;
+      animation: bgPulse 14s ease-in-out infinite;
+    }
+    @keyframes bgPulse{0%,100%{opacity:0.03}50%{opacity:0.08}}
+
+    /* progress bar */
+    .progress-bar{
+      position:fixed; top:0; left:0; height:3px;
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      z-index:9999; width:0;
+    }
+
+    /* theme toggle */
+    .theme-toggle{
+      position:fixed; top:18px; right:18px; z-index:1001;
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      padding:8px 12px; border-radius:999px;
+      display:inline-flex; align-items:center; gap:8px;
+      cursor:pointer; box-shadow:0 8px 30px var(--shadow);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .theme-toggle:hover{ transform:scale(1.03) }
+    .theme-toggle .icon{ font-size:14px }
+    .theme-toggle .label{ font-size:13px; color:var(--text-secondary) }
+
+    /* navbar */
+    .navbar{
+      position:sticky; top:0; z-index:1000;
+      background: linear-gradient(135deg,var(--bg-secondary),var(--bg-card));
+      border-bottom:1px solid var(--border);
+      box-shadow:0 6px 20px var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    .nav-container{
+      max-width:var(--max-width); margin:0 auto; padding:12px 20px;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+    }
+    .logo{ color:var(--accent); font-weight:800; font-size:18px; text-decoration:none }
+    .nav-menu{ list-style:none; display:flex; gap:12px; align-items:center }
+    .nav-menu a{
+      color:var(--text-secondary); text-decoration:none; padding:8px 10px; border-radius:8px;
+      font-size:14px;
+    }
+    .nav-menu a.active, .nav-menu a:hover{
+      color:var(--text-primary); background:linear-gradient(90deg, rgba(0,212,255,0.06), transparent);
+      border:1px solid var(--border);
+    }
+
+    /* hero */
+    .hero{
+      display:flex; align-items:center; justify-content:center; text-align:center;
+      padding:84px 20px; position:relative; overflow:hidden;
+      background: linear-gradient(180deg, rgba(0,0,0,0.04), transparent);
+      border-bottom:1px solid var(--border);
+    }
+    .hero-overlay{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.04), transparent); pointer-events:none }
+    .hero-content{ max-width:900px; z-index:1 }
+    .hero h1{
+      font-size: clamp(28px, 5vw, 48px); font-weight:800;
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom:12px;
+    }
+    .hero p{ color:var(--text-secondary); font-size:clamp(14px,2vw,18px); margin-bottom:18px; }
+    .cta-button{
+      display:inline-block; padding:12px 22px; border-radius:999px; text-decoration:none;
+      background: linear-gradient(90deg,var(--accent),#00a8cc); color:#00121a; font-weight:700;
+      box-shadow:0 10px 30px var(--accent-glow);
+    }
+
+    /* container */
+    .container{ max-width:var(--max-width); margin:36px auto; padding:0 20px 60px }
+
+    /* section title */
+    .section-title{ font-size:20px; color:var(--text-primary); margin-bottom:12px; font-weight:700 }
+
+    /* ASA section */
+    .asa-section{ text-align:center; padding:28px 20px; }
+    .asa-title{ font-size:28px; color:var(--accent); font-weight:800; margin-bottom:4px }
+    .asa-subtitle{ color:var(--text-secondary); margin-bottom:12px }
+    .city-layout-btn{
+      display:inline-block; margin-top:8px; padding:10px 18px; border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#00121a; font-weight:700;
+      text-decoration:none; box-shadow:0 8px 24px var(--accent-glow);
+    }
+
+    /* project / description */
+    .project-section .project-text{ color:var(--text-secondary); margin-bottom:12px; text-align:justify; line-height:1.75 }
+
+    /* course grid */
+    .course-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:12px }
+    .course-block{ background:var(--bg-card); border-radius:12px; padding:18px; border:1px solid var(--border); box-shadow:0 8px 28px var(--shadow) }
+    .course-list{ list-style:disc; margin-left:18px; color:var(--text-secondary); margin-top:8px }
+
+    /* members */
+    .members-section .members-intro{ color:var(--text-secondary); margin-bottom:12px }
+    .member-buttons{ display:flex; gap:12px; flex-wrap:wrap }
+    .member-btn{
+      padding:10px 16px; border-radius:10px; text-decoration:none;
+      background:linear-gradient(90deg, rgba(0,212,255,0.06), transparent); color:var(--text-primary);
+      border:1px solid var(--border);
+    }
+
+    /* team grid */
+    .team-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; margin-top:16px }
+    .team-card{ background:var(--bg-card); border-radius:12px; padding:18px; border:1px solid var(--border); box-shadow:0 10px 30px var(--shadow) }
+    .card-icon{ width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:10px; background:linear-gradient(90deg, rgba(0,212,255,0.08), transparent) }
+    .team-card h3{ margin-bottom:6px; color:var(--text-primary) }
+    .role{ color:var(--accent); font-weight:700; margin-bottom:8px }
+
+    .learn-more{ display:inline-block; margin-top:10px; text-decoration:none; color:var(--text-secondary) }
+
+    /* instructor card */
+    .instructor-card{ background:var(--bg-card); border-radius:12px; padding:18px; border:1px solid var(--border); box-shadow:0 12px 36px var(--shadow); display:flex; gap:16px; align-items:flex-start }
+    .instructor-icon{ width:64px; height:64px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:28px; background:linear-gradient(90deg, rgba(0,212,255,0.08), transparent) }
+    .instructor-title{ color:var(--text-secondary); margin-top:4px }
+
+    /* footer */
+    footer{ padding:28px 20px; text-align:center; color:var(--text-secondary); border-top:1px solid var(--border); margin-top:40px }
+
+    /* responsive */
+    @media (max-width:1024px){
+      .team-grid{ grid-template-columns: repeat(2,1fr) }
+      .course-grid{ grid-template-columns:1fr }
+    }
+    @media (max-width:640px){
+      .nav-menu{ display:none } /* simplified nav for small screens */
+      .hero{ padding:56px 16px }
+      .team-grid{ grid-template-columns:1fr }
+      .project-section, .course-section{ padding:0 8px }
+    }
+    ::selection{ background:var(--accent); color:#001 }
+  </style>
 </head>
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">CityScape</a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="member1.html">Shreyas Hiregoudar</a></li>
-                <li><a href="member2.html">Sufiyan Raza</a></li>
-                <li><a href="member3.html">Aryan</a></li>
-                <li><a href="member4.html">Atharva</a></li>
-            </ul>
-        </div>
-    </nav>
+  <div class="bg-animation" aria-hidden="true"></div>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1 class="fade-in">Building Tomorrow's City</h1>
-            <p class="fade-in-delay">A Revolutionary Urban Planning Project</p>
-            <a href="about.html" class="cta-button">Explore Our Vision</a>
-        </div>
-    </section>
+  <!-- theme toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle theme">
+    <span class="icon" id="themeIcon">🌙</span>
+    <span class="label">Theme</span>
+  </button>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a class="logo" href="index.html">CityScape</a>
+      <ul class="nav-menu" role="menubar" aria-hidden="false">
+        <li role="none"><a role="menuitem" href="index.html" class="active">Home</a></li>
+        <li role="none"><a role="menuitem" href="about.html">About</a></li>
+        <li role="none"><a role="menuitem" href="member1.html">Shreyas Hiregoudar</a></li>
+        <li role="none"><a role="menuitem" href="member2.html">Sufiyan Raza</a></li>
+        <li role="none"><a role="menuitem" href="member3.html">Aryan</a></li>
+        <li role="none"><a role="menuitem" href="member4.html">Atharva</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <h1>Building Tomorrow's City</h1>
+      <p>A Revolutionary Urban Planning Project — ASA City</p>
+      <a class="cta-button" href="about.html">Explore Our Vision</a>
+    </div>
+  </section>
+
+  <main class="container" id="main">
 
     <!-- ASA SECTION -->
-    <section class="asa-section">
-        <div class="container asa-center">
-            <h2 class="asa-title">ASA</h2>
-            <p class="asa-subtitle">Urban Design & Smart City Studio Project</p>
-
-            <!-- CITY LAYOUT BUTTON -->
-            <a href="citylayout.html" class="city-layout-btn">
-                View City Layout
-            </a>
-        </div>
+    <section class="asa-section" aria-labelledby="asa-heading">
+      <h2 id="asa-heading" class="asa-title">ASA</h2>
+      <div class="asa-subtitle">Urban Design &amp; Smart City Studio Project</div>
+      <a class="city-layout-btn" href="citylayout.html" aria-label="View City Layout">View City Layout</a>
     </section>
 
-    <!-- PROJECT DESCRIPTION SECTION -->
-    <section class="project-section">
-        <div class="container">
-            <h2 class="section-title">Project Description</h2>
-            <p class="project-text">
-                ASA City is a futuristic, sustainable, and human-centric urban development concept.
-                The design integrates mixed-use development, efficient transportation networks,
-                green spaces, and smart infrastructure to create a livable and resilient city.
-            </p>
-            <p class="project-text">
-                The project explores how modern cities can balance rapid growth with environmental
-                responsibility. Our team has worked on zoning strategies, street layouts, public
-                amenities, and digital systems that support both citizens and administrators.
-            </p>
-            <p class="project-text">
-                A key emphasis of ASA City is the use of data structures and algorithms as planning tools.
-                Road networks are modeled as weighted graphs, zoning mimics hierarchical tree structures,
-                and urban services rely on efficient searching and optimization. This demonstrates that
-                modern city planning is fundamentally a data-driven process.
-            </p>
-            <p class="project-text">
-                Overall, ASA City represents a complete city concept that combines planning theory,
-                teamwork, and real-world application. It illustrates how urban development can be enhanced
-                through analytics, structured data, and intelligent systems to create a resilient,
-                connected, and livable city.
-            </p>
-        </div>
+    <!-- PROJECT DESCRIPTION -->
+    <section class="project-section" aria-labelledby="proj-desc">
+      <h2 id="proj-desc" class="section-title">Project Description</h2>
+      <p class="project-text">
+        ASA City is a futuristic, sustainable, and human-centric urban development concept.
+        The design integrates mixed-use development, efficient transportation networks,
+        green spaces, and smart infrastructure to create a livable and resilient city.
+      </p>
+      <p class="project-text">
+        The project explores how modern cities can balance rapid growth with environmental
+        responsibility. Our team has worked on zoning strategies, street layouts, public
+        amenities, and digital systems that support both citizens and administrators.
+      </p>
+      <p class="project-text">
+        A key emphasis of ASA City is the use of data structures and algorithms as planning tools.
+        Road networks are modeled as weighted graphs, zoning mimics hierarchical tree structures,
+        and urban services rely on efficient searching and optimization. This demonstrates that
+        modern city planning is fundamentally a data-driven process.
+      </p>
+      <p class="project-text">
+        Overall, ASA City represents a complete city concept that combines planning theory,
+        teamwork, and real-world application. It illustrates how urban development can be enhanced
+        through analytics, structured data, and intelligent systems to create a resilient,
+        connected, and livable city.
+      </p>
     </section>
 
-    <!-- COURSE OVERVIEW / ABOUT THE COURSE -->
-    <section class="course-section">
-        <div class="container">
-            <h2 class="section-title">Course Overview</h2>
-            <div class="course-grid">
-                <div class="course-block">
-                    <h3>About the Course</h3>
-                    <p>
-                        ASA City is developed as part of the Advanced City Development course.
-                        The course integrates principles of urban planning, architectural design,
-                        transportation engineering, sustainability, and smart city technologies
-                        into a unified project.
-                    </p>
-                    <p>
-                        Through studio sessions, case studies, and collaborative design tasks,
-                        students transform conceptual planning ideas into detailed city layouts,
-                        focusing on practicality, functionality, and innovation.
-                    </p>
-                </div>
-
-                <div class="course-block">
-                    <h3>What You Will Learn</h3>
-                    <ul class="course-list">
-                        <li>Fundamentals of urban planning and city structure</li>
-                        <li>Designing road networks, blocks, and land-use zoning</li>
-                        <li>Integrating public transport and walkable public spaces</li>
-                        <li>Applying sustainability principles in city development</li>
-                        <li>Using technology to create smart and connected cities</li>
-                        <li>Working in teams to plan and present a complete city concept</li>
-                    </ul>
-                </div>
-            </div>
+    <!-- COURSE OVERVIEW -->
+    <section class="course-section" aria-labelledby="course-heading">
+      <h2 id="course-heading" class="section-title">Course Overview</h2>
+      <div class="course-grid" role="region" aria-label="Course overview grid">
+        <div class="course-block">
+          <h3>About the Course</h3>
+          <p>
+            ASA City is developed as part of the Advanced City Development course.
+            The course integrates principles of urban planning, architectural design,
+            transportation engineering, sustainability, and smart city technologies.
+          </p>
+          <p>
+            Through studio sessions, case studies, and collaborative design tasks,
+            students transform conceptual planning ideas into detailed city layouts,
+            focusing on practicality, functionality, and innovation.
+          </p>
         </div>
+
+        <div class="course-block">
+          <h3>What You Will Learn</h3>
+          <ul class="course-list" aria-label="Learning outcomes">
+            <li>Fundamentals of urban planning and city structure</li>
+            <li>Designing road networks, blocks, and land-use zoning</li>
+            <li>Integrating public transport and walkable public spaces</li>
+            <li>Applying sustainability principles in city development</li>
+            <li>Using technology to create smart and connected cities</li>
+            <li>Working in teams to plan and present a complete city concept</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
-    <!-- MEMBER BUTTONS SECTION -->
-    <section class="members-section">
-        <div class="container">
-            <h2 class="section-title">Team Members</h2>
-            <p class="members-intro">
-                Click on a member to view their individual contribution and detailed profile.
-            </p>
-            <div class="member-buttons">
-                <a href="member1.html" class="member-btn">Shreyas Hiregoudar</a>
-                <a href="member2.html" class="member-btn">Sufiyan Raza</a>
-                <a href="member3.html" class="member-btn">Aryan</a>
-                <a href="member4.html" class="member-btn">Atharva</a>
-            </div>
-        </div>
+    <!-- MEMBERS -->
+    <section class="members-section" aria-labelledby="members-heading">
+      <h2 id="members-heading" class="section-title">Team Members</h2>
+      <p class="members-intro">Click on a member to view their individual contribution and detailed profile.</p>
+      <div class="member-buttons" role="list">
+        <a class="member-btn" role="listitem" href="member1.html">Shreyas Hiregoudar</a>
+        <a class="member-btn" role="listitem" href="member2.html">Sufiyan Raza</a>
+        <a class="member-btn" role="listitem" href="member3.html">Aryan</a>
+        <a class="member-btn" role="listitem" href="member4.html">Atharva</a>
+      </div>
     </section>
 
-    <!-- TEAM CARD SECTION -->
-    <section class="team-section">
-        <div class="container">
-            <h2 class="section-title">Our Team</h2>
-            <div class="team-grid">
-                <div class="team-card">
-                    <div class="card-icon">👤</div>
-                    <h3>Shreyas Hiregoudar</h3>
-                    <p class="role">USN: 212</p>
-                    <p>Lead on core city layout, graph modeling for road networks, and zoning structure.</p>
-                    <a href="member1.html" class="learn-more">View Profile →</a>
-                </div>
-                <div class="team-card">
-                    <div class="card-icon">👤</div>
-                    <h3>Sufiyan Raza</h3>
-                    <p class="role">USN: 201</p>
-                    <p>Focused on smart infrastructure modules, data-driven services, and system integration.</p>
-                    <a href="member2.html" class="learn-more">View Profile →</a>
-                </div>
-                <div class="team-card">
-                    <div class="card-icon">👤</div>
-                    <h3>Aryan</h3>
-                    <p class="role">USN: 225</p>
-                    <p>Worked on sustainable design, public spaces, and environmental planning strategies.</p>
-                    <a href="member3.html" class="learn-more">View Profile →</a>
-                </div>
-                <div class="team-card">
-                    <div class="card-icon">👤</div>
-                    <h3>Atharva</h3>
-                    <p class="role">USN: 222</p>
-                    <p>Contributed to documentation, visual presentation, and transport planning concepts.</p>
-                    <a href="member4.html" class="learn-more">View Profile →</a>
-                </div>
-            </div>
+    <!-- TEAM CARDS -->
+    <section class="team-section" aria-labelledby="team-heading">
+      <h2 id="team-heading" class="section-title">Our Team</h2>
+      <div class="team-grid" role="list">
+        <div class="team-card" role="listitem">
+          <div class="card-icon">👤</div>
+          <h3>Shreyas Hiregoudar</h3>
+          <div class="role">USN: 212</div>
+          <p>Lead on core city layout, graph modeling for road networks, and zoning structure.</p>
+          <a class="learn-more" href="member1.html">View Profile →</a>
         </div>
+
+        <div class="team-card" role="listitem">
+          <div class="card-icon">👤</div>
+          <h3>Sufiyan Raza</h3>
+          <div class="role">USN: 201</div>
+          <p>Focused on smart infrastructure modules, data-driven services, and system integration.</p>
+          <a class="learn-more" href="member2.html">View Profile →</a>
+        </div>
+
+        <div class="team-card" role="listitem">
+          <div class="card-icon">👤</div>
+          <h3>Aryan</h3>
+          <div class="role">USN: 225</div>
+          <p>Worked on sustainable design, public spaces, and environmental planning strategies.</p>
+          <a class="learn-more" href="member3.html">View Profile →</a>
+        </div>
+
+        <div class="team-card" role="listitem">
+          <div class="card-icon">👤</div>
+          <h3>Atharva</h3>
+          <div class="role">USN: 222</div>
+          <p>Contributed to documentation, visual presentation, and transport planning concepts.</p>
+          <a class="learn-more" href="member4.html">View Profile →</a>
+        </div>
+      </div>
     </section>
 
-    <!-- INSTRUCTOR SECTION -->
-    <section class="instructor-section">
-        <div class="container">
-            <div class="instructor-card">
-                <div class="instructor-header">
-                    <div class="instructor-icon">🎓</div>
-                    <div>
-                        <h2>Course Instructor</h2>
-                        <p class="instructor-title">Professor / Dr. Prakash Hegde</p>
-                    </div>
-                </div>
-                <div class="instructor-content">
-                    <p>
-                        Under the guidance of our respected instructor, the team has developed a strong
-                        foundation in urban planning, algorithmic thinking, and sustainable city design.
-                        His expertise in city infrastructure and modern design techniques has been
-                        instrumental in shaping the ASA City project.
-                    </p>
-                    <div class="detail-item">
-                        <span class="detail-label">Course:</span>
-                        <span>Design and Analysis of Algorithms (DAA)</span>
-                    </div>
-                </div>
-            </div>
+    <!-- INSTRUCTOR -->
+    <section class="instructor-section" aria-labelledby="instr-heading" style="margin-top:22px">
+      <h2 id="instr-heading" class="section-title">Course Instructor</h2>
+      <div class="instructor-card" role="group" aria-label="Instructor card">
+        <div class="instructor-icon" aria-hidden="true">🎓</div>
+        <div>
+          <h3>Professor / Dr. Prakash Hegde</h3>
+          <div class="instructor-title">Course: Design and Analysis of Algorithms (DAA)</div>
+          <p style="margin-top:10px;color:var(--text-secondary)">
+            Under the guidance of our respected instructor, the team has developed a strong
+            foundation in urban planning, algorithmic thinking, and sustainable city design.
+            His expertise in city infrastructure and modern design techniques has been
+            instrumental in shaping the ASA City project.
+          </p>
         </div>
+      </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2025–26 ASA City Project.</p>
-        </div>
-    </footer>
+    <div style="text-align:center;margin-top:28px">
+      <a class="cta-button" href="index.html">← Back to Home</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div style="max-width:var(--max-width);margin:0 auto;padding:8px 20px">
+      <p>&copy; 2025–26 ASA City Project · SHREYAS Template</p>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle with persistence
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const userPref = localStorage.getItem('shreyas_theme_light');
+
+    function setTheme(isLight) {
+      document.body.classList.toggle('light-mode', isLight);
+      themeIcon.textContent = isLight ? '☀️' : '🌙';
+      themeToggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+      localStorage.setItem('shreyas_theme_light', isLight ? '1' : '0');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(!document.body.classList.contains('light-mode'));
+    });
+
+    // initialize
+    setTheme(userPref === '1');
+
+    // scroll progress bar
+    const progressBar = document.getElementById('progressBar');
+    function updateProgress() {
+      const doc = document.documentElement;
+      const scrolled = (doc.scrollTop) / (doc.scrollHeight - doc.clientHeight);
+      progressBar.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // small accessibility: focus outline for keyboard users
+    (function() {
+      function handleFirstTab(e) {
+        if (e.key === 'Tab') {
+          document.documentElement.classList.add('user-is-tabbing');
+          window.removeEventListener('keydown', handleFirstTab);
+        }
+      }
+      window.addEventListener('keydown', handleFirstTab);
+    })();
+  </script>
 </body>
 </html>
