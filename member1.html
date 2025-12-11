@@ -15,8 +15,29 @@
             --accent-glow:rgba(0,212,255,0.18);
             --border:rgba(255,255,255,0.06);
             --shadow:rgba(0,0,0,0.5);
+
+            /* SDG button defaults */
+            --sdg-bg: rgba(255,255,255,0.04);
+            --sdg-border: rgba(255,255,255,0.06);
+            --sdg-text: var(--text-primary);
+            --sdg-hover: rgba(0,212,255,0.08);
         }
-        body.light-mode{ --bg-primary:#f0f2f5; --bg-secondary:#ffffff; --bg-card:#ffffff; --text-primary:#1c1e21; --text-secondary:#606770; --accent:#0066ff; --accent-glow:rgba(0,102,255,0.12); --border:rgba(0,0,0,0.08); --shadow:rgba(0,0,0,0.08); }
+        body.light-mode{
+            --bg-primary:#f0f2f5;
+            --bg-secondary:#ffffff;
+            --bg-card:#ffffff;
+            --text-primary:#1c1e21;
+            --text-secondary:#606770;
+            --accent:#0066ff;
+            --accent-glow:rgba(0,102,255,0.12);
+            --border:rgba(0,0,0,0.08);
+            --shadow:rgba(0,0,0,0.08);
+
+            --sdg-bg: rgba(0,0,0,0.03);
+            --sdg-border: rgba(0,0,0,0.06);
+            --sdg-text: var(--text-primary);
+            --sdg-hover: rgba(0,102,255,0.03);
+        }
 
         *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
         html{scroll-behavior:smooth}
@@ -67,10 +88,32 @@
 
         .back-button{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#00a8cc);color:#00121a;text-decoration:none;font-weight:700;margin:28px 0;box-shadow:0 10px 30px var(--accent-glow)}
 
+        /* SDG button styles (inserted) */
+        .sdg-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
+        .sdg-btn{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:6px 10px;
+            border-radius:999px;
+            background:var(--sdg-bg);
+            color:var(--sdg-text);
+            font-size:13px;
+            font-weight:700;
+            border:1px solid var(--sdg-border);
+            box-shadow:0 6px 18px rgba(0,0,0,0.06);
+            cursor:default;               /* not interactive */
+            user-select:none;
+            transition:transform .12s,background .12s,box-shadow .12s;
+        }
+        .sdg-btn:hover{background:var(--sdg-hover);transform:translateY(-2px)}
+        .sdg-badge{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:11px;font-weight:800;background:linear-gradient(180deg,var(--accent),#00a8cc);color:#00121a}
+        .sdg-label{font-weight:700;color:var(--text-primary);opacity:0.95}
+        .sdg-desc{display:block;font-size:12px;color:var(--text-secondary);margin-top:6px}
+
         footer{text-align:center;padding:36px 18px;color:var(--text-secondary);border-top:1px solid var(--border);margin-top:40px}
 
-        @media (max-width:768px){ header{padding:36px 16px}.project{padding:18px}.container{padding:0 14px} }
-
+        @media (max-width:768px){ header{padding:36px 16px}.project{padding:18px}.container{padding:0 14px} .sdg-list{gap:6px}}
         ::selection{background:var(--accent);color:#001}
     </style>
 </head>
@@ -78,7 +121,7 @@
     <div class="bg-animation" aria-hidden="true"></div>
     <div class="progress-bar" id="progressBar"></div>
 
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button">
         <span id="themeIcon">🌙</span>
         <span style="font-size:13px">Theme</span>
     </button>
@@ -100,6 +143,22 @@
                 to minimize total waiting time and congestion.
             </p>
 
+            <!-- SDG buttons: SDG 11, SDG 9, SDG 13 -->
+            <div class="sdg-list" aria-hidden="false">
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>// Each junction and its incoming roads
 struct Intersection {
@@ -107,40 +166,14 @@ struct Intersection {
     std::vector&lt;int&gt; incomingRoadIds;
 };
 
-// Live vehicle count for each road
+ // Live vehicle count for each road
 struct RoadLoad {
     int roadId;
     int vehicleCount;
 };
 
-// intersectionId -&gt; list of (roadId, greenTimeInSeconds)
-using SignalPlan = std::unordered_map&lt;int, std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;
-
-// trafficMap: roadId -&gt; RoadLoad
-void computeSignalPlan(
-    const Intersection &inter,
-    const std::unordered_map&lt;int, RoadLoad&gt; &trafficMap,
-    int cycleTime,
-    int minGreen,
-    SignalPlan &plan
-) {
-    int total = 0;
-    for (int rid : inter.incomingRoadIds) {
-        auto it = trafficMap.find(rid);
-        int count = (it == trafficMap.end() ? 1 : std::max(it-&gt;second.vehicleCount, 1));
-        total += count;
-    }
-
-    std::vector&lt;std::pair&lt;int,int&gt;&gt; phases;
-    for (int rid : inter.incomingRoadIds) {
-        auto it = trafficMap.find(rid);
-        int count = (it == trafficMap.end() ? 1 : std::max(it-&gt;second.vehicleCount, 1));
-        double share = (double)count / total;
-        int green = std::max(minGreen, (int)(share * cycleTime));
-        phases.push_back({rid, green});
-    }
-    plan[inter.id] = phases;
-}</code></pre>
+ // intersectionId -&gt; list of (roadId, greenTimeInSeconds)
+using SignalPlan = std::unordered_map&lt;int, std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;</code></pre>
 
             <h3>Application Logic</h3>
             <p>
@@ -162,43 +195,29 @@ void computeSignalPlan(
                 using ambient light and motion detection.
             </p>
 
+            <!-- SDG buttons: SDG 7, SDG 11, SDG 13 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 7 — Affordable and Clean Energy">
+                    <span class="sdg-badge">7</span>
+                    <span class="sdg-label">SDG 7</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>struct LightPole {
     int id;
     bool isOn;
     int brightness;          // 0 to 100
     std::time_t lastMotion;  // last motion detected time
-};
-
-// O(1) access for each pole by ID
-using PoleMap = std::unordered_map&lt;int, LightPole&gt;;
-
-void updatePoleState(
-    LightPole &pole,
-    bool isNight,
-    bool motionDetected,
-    int dimTimeoutSeconds
-) {
-    std::time_t now = std::time(nullptr);
-
-    if (!isNight) {
-        pole.isOn = false;
-        pole.brightness = 0;
-        return;
-    }
-
-    if (motionDetected) {
-        pole.lastMotion = now;
-        pole.isOn = true;
-        pole.brightness = 100;    // full brightness when motion
-    } else {
-        double diff = std::difftime(now, pole.lastMotion);
-        if (diff &gt; dimTimeoutSeconds) {
-            pole.isOn = true;
-            pole.brightness = 30; // dim mode
-        }
-    }
-}</code></pre>
+};</code></pre>
 
             <h3>Application Logic</h3>
             <p>
@@ -220,37 +239,28 @@ void updatePoleState(
                 collection routes only for bins that actually need pickup.
             </p>
 
+            <!-- SDG buttons: SDG 11, SDG 12, SDG 13 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 12 — Responsible Consumption and Production">
+                    <span class="sdg-badge">12</span>
+                    <span class="sdg-label">SDG 12</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>struct SmartBin {
     int id;
     int node;          // graph node index
     double fillLevel;  // 0.0 – 1.0
-};
-
-// adjacency list: graph[u] = list of (v, distance)
-using Graph = std::vector&lt;std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;
-
-std::vector&lt;int&gt; dijkstra(int start, const Graph &graph) {
-    const int INF = 1e9;
-    int n = graph.size();
-    std::vector&lt;int&gt; dist(n, INF);
-    dist[start] = 0;
-    std::priority_queue&lt;std::pair&lt;int,int&gt;,
-                        std::vector&lt;std::pair&lt;int,int&gt;&gt;,
-                        std::greater&lt;std::pair&lt;int,int&gt;&gt;&gt; pq;
-    pq.push({0, start});
-    while (!pq.empty()) {
-        auto [d, u] = pq.top(); pq.pop();
-        if (d != dist[u]) continue;
-        for (auto [v, w] : graph[u]) {
-            if (dist[v] &gt; d + w) {
-                dist[v] = d + w;
-                pq.push({dist[v], v});
-            }
-        }
-    }
-    return dist;
-}</code></pre>
+};</code></pre>
 
             <h3>Application Logic</h3>
             <p>
@@ -271,6 +281,22 @@ std::vector&lt;int&gt; dijkstra(int start, const Graph &graph) {
                 to identify pollution hotspots. The system must collect AQI data from distributed sensors, maintain
                 a live pollution map, and trigger alerts when safe limits are exceeded.
             </p>
+
+            <!-- SDG buttons: SDG 3, SDG 11, SDG 13 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 3 — Good Health and Well-Being">
+                    <span class="sdg-badge">3</span>
+                    <span class="sdg-label">SDG 3</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
 
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>// City is represented as a grid of cells (i, j)
@@ -308,6 +334,22 @@ struct AQAlert {
                 to compute flood risk for each zone and trigger early warnings or drainage actions.
             </p>
 
+            <!-- SDG buttons: SDG 11, SDG 13, SDG 6 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+                <div class="sdg-btn" title="SDG 6 — Clean Water and Sanitation">
+                    <span class="sdg-badge">6</span>
+                    <span class="sdg-label">SDG 6</span>
+                </div>
+            </div>
+
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>struct ZoneData {
     int zoneId;
@@ -343,6 +385,18 @@ double computeRiskScore(const ZoneData &z) {
                 to remote doctors, ensuring critical cases are treated first.
             </p>
 
+            <!-- SDG buttons: SDG 3, SDG 9 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 3 — Good Health and Well-Being">
+                    <span class="sdg-badge">3</span>
+                    <span class="sdg-label">SDG 3</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+            </div>
+
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>struct Patient {
     int id;
@@ -371,6 +425,22 @@ double computeRiskScore(const ZoneData &z) {
                 tariffs, and generate analytics on consumption patterns.
             </p>
 
+            <!-- SDG buttons: SDG 7, SDG 9, SDG 11 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 7 — Affordable and Clean Energy">
+                    <span class="sdg-badge">7</span>
+                    <span class="sdg-label">SDG 7</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+            </div>
+
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>struct TariffSlab {
     double unitsLimit;  // max units allowed in this slab
@@ -396,6 +466,22 @@ double computeRiskScore(const ZoneData &z) {
                 occupants. The system must detect fire-affected nodes and compute safe, shortest evacuation paths
                 that avoid hazardous zones.
             </p>
+
+            <!-- SDG buttons: SDG 11, SDG 9, SDG 3 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 3 — Good Health and Well-Being">
+                    <span class="sdg-badge">3</span>
+                    <span class="sdg-label">SDG 3</span>
+                </div>
+            </div>
 
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>// Dijkstra variant that avoids blocked nodes (sketch)
@@ -424,6 +510,22 @@ std::vector&lt;int&gt; dijkstraSafe(int start, const BuildingGraph &g, const std
                 for each charging point and handle booking requests without conflict.
             </p>
 
+            <!-- SDG buttons: SDG 7, SDG 11, SDG 13 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 7 — Affordable and Clean Energy">
+                    <span class="sdg-badge">7</span>
+                    <span class="sdg-label">SDG 7</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>struct Slot { long long startTime; long long endTime; };</code></pre>
 
@@ -443,6 +545,18 @@ std::vector&lt;int&gt; dijkstraSafe(int start, const BuildingGraph &g, const std
                 time-consuming and error-prone. The system should centralise student records, automate attendance
                 logging, and map each class to suitable classrooms based on capacity.
             </p>
+
+            <!-- SDG buttons: SDG 4, SDG 9 -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 4 — Quality Education">
+                    <span class="sdg-badge">4</span>
+                    <span class="sdg-label">SDG 4</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+            </div>
 
             <h3>Data Structures &amp; C++ Algorithm Logic</h3>
             <pre><code>struct Student { int id; std::string name; int classId; };</code></pre>
