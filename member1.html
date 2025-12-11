@@ -2,109 +2,436 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SHREYAS </title>
+    <title>SHREYAS - Smart City Projects</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
         }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #1a1f3a;
+            --bg-card: #252b48;
+            --text-primary: #e4e6eb;
+            --text-secondary: #b8bcc8;
+            --accent: #00d4ff;
+            --accent-glow: rgba(0, 212, 255, 0.3);
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-mode {
+            --bg-primary: #f0f2f5;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1c1e21;
+            --text-secondary: #606770;
+            --accent: #0066ff;
+            --accent-glow: rgba(0, 102, 255, 0.15);
+            --border: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            background: #f5f5f5;
-            color: #222;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
         }
-        header {
-            background: #111;
-            color: #fff;
-            padding: 20px 10px;
-            text-align: center;
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--accent) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent) 0%, transparent 50%);
+            animation: bgPulse 15s ease-in-out infinite;
         }
-        header h1 {
-            font-size: 26px;
-            margin-bottom: 5px;
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.03; }
+            50% { opacity: 0.06; }
         }
-        header p {
-            font-size: 14px;
-            opacity: 0.8;
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--shadow);
         }
-        .container {
-            max-width: 1100px;
-            margin: 20px auto 40px;
-            padding: 0 15px;
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px var(--accent-glow);
         }
-        .project {
-            background: #fff;
-            border-radius: 8px;
-            padding: 18px 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        }
-        .project h2 {
+
+        .theme-toggle span {
             font-size: 20px;
-            margin-bottom: 8px;
-            color: #1a237e;
         }
+
+        header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid var(--border);
+            box-shadow: 0 4px 30px var(--shadow);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            animation: headerGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes headerGlow {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        header h1 {
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 800;
+            margin-bottom: 12px;
+            position: relative;
+            background: linear-gradient(135deg, var(--accent) 0%, #00ffaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        header p {
+            font-size: clamp(14px, 2vw, 18px);
+            color: var(--text-secondary);
+            position: relative;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .project {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        .project:nth-child(1) { animation-delay: 0.1s; }
+        .project:nth-child(2) { animation-delay: 0.15s; }
+        .project:nth-child(3) { animation-delay: 0.2s; }
+        .project:nth-child(4) { animation-delay: 0.25s; }
+        .project:nth-child(5) { animation-delay: 0.3s; }
+        .project:nth-child(6) { animation-delay: 0.35s; }
+        .project:nth-child(7) { animation-delay: 0.4s; }
+        .project:nth-child(8) { animation-delay: 0.45s; }
+        .project:nth-child(9) { animation-delay: 0.5s; }
+        .project:nth-child(10) { animation-delay: 0.55s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-glow) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .project:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        .project:hover::before {
+            opacity: 1;
+        }
+
+        .project h2 {
+            font-size: clamp(20px, 3vw, 28px);
+            margin-bottom: 16px;
+            color: var(--accent);
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .project:hover h2 {
+            transform: translateX(8px);
+        }
+
+        .project h2::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #00ffaa);
+            transition: width 0.4s ease;
+        }
+
+        .project:hover h2::after {
+            width: 100%;
+        }
+
         .project h3 {
-            font-size: 16px;
-            margin-top: 10px;
-            margin-bottom: 4px;
-            color: #333;
+            font-size: clamp(16px, 2.5vw, 20px);
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        .project h3::before {
+            content: '▸';
+            color: var(--accent);
+            font-size: 20px;
+        }
+
         .project p {
-            font-size: 14px;
-            margin-bottom: 6px;
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
             text-align: justify;
+            line-height: 1.8;
         }
+
         .project ul {
-            margin-left: 18px;
-            margin-bottom: 6px;
-            font-size: 14px;
+            margin-left: 24px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
         }
+
         pre {
-            background: #111;
-            color: #eee;
-            padding: 10px 12px;
-            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 20px;
+            border-radius: 12px;
             overflow-x: auto;
             font-size: 13px;
-            margin: 6px 0 8px;
+            margin: 16px 0;
+            border: 1px solid var(--border);
+            position: relative;
+            transition: all 0.3s ease;
         }
+
+        pre:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        pre::before {
+            content: 'C++';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--accent);
+            color: var(--bg-primary);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
         code {
-            font-family: Consolas, "Courier New", monospace;
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            line-height: 1.6;
         }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent) 0%, #00a8cc 100%);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            margin: 40px 0;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover::before {
+            transform: translateX(-4px);
+        }
+
         footer {
             text-align: center;
-            padding: 15px 10px 30px;
-            font-size: 12px;
-            color: #555;
+            padding: 40px 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        /* Scroll progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #00ffaa);
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .project {
+                padding: 24px;
+                margin-bottom: 24px;
+            }
+
+            pre {
+                font-size: 12px;
+                padding: 16px;
+            }
+
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent);
+            color: white;
         }
     </style>
 </head>
 <body>
+    <div class="bg-animation"></div>
+    <div class="progress-bar" id="progressBar"></div>
 
-<header>
-    <h1>Smart City – DAA Mini Project Collection (C++)</h1>
-    <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use</p>
-</header>
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span>
+    </div>
 
-<div class="container">
+    <header>
+        <h1>Smart City – DAA Mini Project Collection</h1>
+        <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use</p>
+    </header>
 
-    <!-- 1. Smart Traffic Signal Optimization System -->
-    <section class="project" id="proj1">
-        <h2>1. Smart Traffic Signal Optimization System</h2>
+    <div class="container">
+        <section class="project" id="proj1">
+            <h2>1. Smart Traffic Signal Optimization System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Fixed-time traffic lights cause long queues on busy approaches and waste green time on empty roads.
-            The system should dynamically adjust signal timings at junctions based on real-time vehicle density
-            to minimize total waiting time and congestion.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Fixed-time traffic lights cause long queues on busy approaches and waste green time on empty roads.
+                The system should dynamically adjust signal timings at junctions based on real-time vehicle density
+                to minimize total waiting time and congestion.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>// Each junction and its incoming roads
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>// Each junction and its incoming roads
 struct Intersection {
     int id;
     std::vector&lt;int&gt; incomingRoadIds;
@@ -145,28 +472,27 @@ void computeSignalPlan(
     plan[inter.id] = phases;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Sensors or cameras count vehicles on each incoming road. For every cycle, the controller gathers these
-            counts and runs the above logic to compute green time for each approach. The updated signal plan is sent
-            to the junction controller, which changes phase durations accordingly, reducing average waiting time and
-            improving throughput at busy intersections.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Sensors or cameras count vehicles on each incoming road. For every cycle, the controller gathers these
+                counts and runs the above logic to compute green time for each approach. The updated signal plan is sent
+                to the junction controller, which changes phase durations accordingly, reducing average waiting time and
+                improving throughput at busy intersections.
+            </p>
+        </section>
 
-    <!-- 2. Smart Street Lighting Automation -->
-    <section class="project" id="proj2">
-        <h2>2. Smart Street Lighting Automation</h2>
+        <section class="project" id="proj2">
+            <h2>2. Smart Street Lighting Automation</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Street lights often remain ON at full power all night, even when no pedestrians or vehicles are present,
-            resulting in high energy wastage. The system should automatically control ON/OFF state and brightness
-            using ambient light and motion detection.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Street lights often remain ON at full power all night, even when no pedestrians or vehicles are present,
+                resulting in high energy wastage. The system should automatically control ON/OFF state and brightness
+                using ambient light and motion detection.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>struct LightPole {
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct LightPole {
     int id;
     bool isOn;
     int brightness;          // 0 to 100
@@ -203,28 +529,27 @@ void updatePoleState(
     }
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            A light sensor determines whether it is night or day. Motion sensors (PIR/IR) near each pole
-            trigger updates for that pole. At night, the lamp turns to full brightness when motion is
-            detected and then returns to dim mode after a timeout period without motion. During daytime
-            all lamps stay OFF. This achieves significant energy savings while retaining safety.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                A light sensor determines whether it is night or day. Motion sensors (PIR/IR) near each pole
+                trigger updates for that pole. At night, the lamp turns to full brightness when motion is
+                detected and then returns to dim mode after a timeout period without motion. During daytime
+                all lamps stay OFF. This achieves significant energy savings while retaining safety.
+            </p>
+        </section>
 
-    <!-- 3. Intelligent Waste Collection & Routing System -->
-    <section class="project" id="proj3">
-        <h2>3. Intelligent Waste Collection & Routing System</h2>
+        <section class="project" id="proj3">
+            <h2>3. Intelligent Waste Collection & Routing System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Garbage trucks follow fixed routes regardless of bin fill levels, causing some bins to overflow
-            and others to be collected half-empty. The system should monitor bin fullness and generate efficient
-            collection routes only for bins that actually need pickup.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Garbage trucks follow fixed routes regardless of bin fill levels, causing some bins to overflow
+                and others to be collected half-empty. The system should monitor bin fullness and generate efficient
+                collection routes only for bins that actually need pickup.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>struct SmartBin {
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct SmartBin {
     int id;
     int node;          // graph node index
     double fillLevel;  // 0.0 – 1.0
@@ -288,28 +613,27 @@ std::vector&lt;int&gt; planRouteGreedy(
     return route;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Smart bins periodically send their fill levels to a central server. Bins crossing a configured
-            threshold (for example 80%) are marked as “ready for pickup”. Using the street graph, the system
-            runs Dijkstra to estimate travel distances and greedily chooses the next nearest ready bin,
-            generating an ordered route for each truck. This reduces fuel cost, time, and bin overflow.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Smart bins periodically send their fill levels to a central server. Bins crossing a configured
+                threshold (for example 80%) are marked as "ready for pickup". Using the street graph, the system
+                runs Dijkstra to estimate travel distances and greedily chooses the next nearest ready bin,
+                generating an ordered route for each truck. This reduces fuel cost, time, and bin overflow.
+            </p>
+        </section>
 
-    <!-- 4. Citywide Air Quality Monitoring Network -->
-    <section class="project" id="proj4">
-        <h2>4. Citywide Air Quality Monitoring Network</h2>
+        <section class="project" id="proj4">
+            <h2>4. Citywide Air Quality Monitoring Network</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Air quality varies across different parts of the city. Without continuous monitoring, it is hard
-            to identify pollution hotspots. The system must collect AQI data from distributed sensors, maintain
-            a live pollution map, and trigger alerts when safe limits are exceeded.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Air quality varies across different parts of the city. Without continuous monitoring, it is hard
+                to identify pollution hotspots. The system must collect AQI data from distributed sensors, maintain
+                a live pollution map, and trigger alerts when safe limits are exceeded.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>// City is represented as a grid of cells (i, j)
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>// City is represented as a grid of cells (i, j)
 using AQGrid = std::vector&lt;std::vector&lt;int&gt;&gt;; // AQI values
 
 struct AQReading {
@@ -340,28 +664,27 @@ void updateGridAndAlerts(
     }
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Each air-quality sensor maps its position to a grid cell and periodically sends AQI values.
-            The grid is updated and any cell crossing a critical threshold generates an alert entry.
-            A web dashboard can visualise the grid as a heatmap, and authorities can focus on highly
-            polluted cells for mitigation like traffic restrictions, green buffers, or industrial checks.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Each air-quality sensor maps its position to a grid cell and periodically sends AQI values.
+                The grid is updated and any cell crossing a critical threshold generates an alert entry.
+                A web dashboard can visualise the grid as a heatmap, and authorities can focus on highly
+                polluted cells for mitigation like traffic restrictions, green buffers, or industrial checks.
+            </p>
+        </section>
 
-    <!-- 5. Flood Prediction & Smart Drainage System -->
-    <section class="project" id="proj5">
-        <h2>5. Flood Prediction & Smart Drainage System</h2>
+        <section class="project" id="proj5">
+            <h2>5. Flood Prediction & Smart Drainage System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Low-lying regions in cities face sudden flooding due to heavy rainfall and clogged drains.
-            Manual monitoring is slow and reactive. The system must analyse water-level and rainfall data
-            to compute flood risk for each zone and trigger early warnings or drainage actions.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Low-lying regions in cities face sudden flooding due to heavy rainfall and clogged drains.
+                Manual monitoring is slow and reactive. The system must analyse water-level and rainfall data
+                to compute flood risk for each zone and trigger early warnings or drainage actions.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>struct ZoneData {
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct ZoneData {
     int zoneId;
     double rainfall;     // recent rainfall in mm
     double waterLevel;   // current water level in cm
@@ -388,28 +711,27 @@ void evaluateZones(
     }
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Rain gauges and water-level sensors feed data into a central controller. Each zone is assigned
-            a flood risk score using rainfall, current water level, and elevation. If the risk crosses a
-            defined threshold, the zone is marked as “at risk”. This can automatically open pumps or sluice
-            gates, send alerts to residents, and inform disaster management teams for proactive measures.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Rain gauges and water-level sensors feed data into a central controller. Each zone is assigned
+                a flood risk score using rainfall, current water level, and elevation. If the risk crosses a
+                defined threshold, the zone is marked as "at risk". This can automatically open pumps or sluice
+                gates, send alerts to residents, and inform disaster management teams for proactive measures.
+            </p>
+        </section>
 
-    <!-- 6. Smart Health Kiosk & Telemedicine Booth -->
-    <section class="project" id="proj6">
-        <h2>6. Smart Health Kiosk & Telemedicine Booth</h2>
+        <section class="project" id="proj6">
+            <h2>6. Smart Health Kiosk & Telemedicine Booth</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            In remote or crowded urban areas, patients suffer long waiting times and limited doctor access.
-            A smart health kiosk should capture vital signs, assign triage priorities, and connect patients
-            to remote doctors, ensuring critical cases are treated first.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                In remote or crowded urban areas, patients suffer long waiting times and limited doctor access.
+                A smart health kiosk should capture vital signs, assign triage priorities, and connect patients
+                to remote doctors, ensuring critical cases are treated first.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>struct Patient {
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct Patient {
     int id;
     std::string name;
     int priority;      // higher = more urgent
@@ -438,28 +760,27 @@ Patient getNextPatient(PatientQueue &pq) {
     return p;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            The kiosk records vitals such as heart rate, temperature, SpO₂, and basic symptoms. A simple triage
-            algorithm assigns a priority score based on abnormal values. Patients are stored in a priority queue,
-            and the doctor console always pulls the highest-priority (most critical) patient next. This ensures
-            emergency cases receive timely teleconsultation while routine cases wait in order.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                The kiosk records vitals such as heart rate, temperature, SpO₂, and basic symptoms. A simple triage
+                algorithm assigns a priority score based on abnormal values. Patients are stored in a priority queue,
+                and the doctor console always pulls the highest-priority (most critical) patient next. This ensures
+                emergency cases receive timely teleconsultation while routine cases wait in order.
+            </p>
+        </section>
 
-    <!-- 7. Smart Energy Billing & Analytics Platform -->
-    <section class="project" id="proj7">
-        <h2>7. Smart Energy Billing & Analytics Platform</h2>
+        <section class="project" id="proj7">
+            <h2>7. Smart Energy Billing & Analytics Platform</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Traditional billing is based on monthly manual meter readings, which is slow and unable to support
-            dynamic tariffs. The system should read smart meters frequently, compute bills using slab-based
-            tariffs, and generate analytics on consumption patterns.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Traditional billing is based on monthly manual meter readings, which is slow and unable to support
+                dynamic tariffs. The system should read smart meters frequently, compute bills using slab-based
+                tariffs, and generate analytics on consumption patterns.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>struct TariffSlab {
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct TariffSlab {
     double unitsLimit;  // max units allowed in this slab
     double rate;        // price per unit
 };
@@ -481,28 +802,27 @@ double computeBill(double units, const std::vector&lt;TariffSlab&gt; &slabs) {
     return cost;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Smart meters periodically send energy usage to the backend. The system aggregates units consumed
-            in a billing period and applies slab-based tariffs via the above function. Bills are generated,
-            stored, and shared with consumers. Over time, the accumulated data can be analysed to detect
-            heavy users, peak hours, and opportunities for energy-saving programs or dynamic pricing.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Smart meters periodically send energy usage to the backend. The system aggregates units consumed
+                in a billing period and applies slab-based tariffs via the above function. Bills are generated,
+                stored, and shared with consumers. Over time, the accumulated data can be analysed to detect
+                heavy users, peak hours, and opportunities for energy-saving programs or dynamic pricing.
+            </p>
+        </section>
 
-    <!-- 8. Intelligent Building Fire Safety System -->
-    <section class="project" id="proj8">
-        <h2>8. Intelligent Building Fire Safety System</h2>
+        <section class="project" id="proj8">
+            <h2>8. Intelligent Building Fire Safety System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            In multi-storey smart buildings, fire or smoke in certain corridors can block exits and confuse
-            occupants. The system must detect fire-affected nodes and compute safe, shortest evacuation paths
-            that avoid hazardous zones.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                In multi-storey smart buildings, fire or smoke in certain corridors can block exits and confuse
+                occupants. The system must detect fire-affected nodes and compute safe, shortest evacuation paths
+                that avoid hazardous zones.
+            </p>
 
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>// Graph representation for building: node = room/corridor/junction
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>// Graph representation for building: node = room/corridor/junction
 using BuildingGraph = std::vector&lt;std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;
 // building[u] = list of (v, distance)
 
@@ -515,184 +835,4 @@ std::vector&lt;int&gt; dijkstraSafe(
     const int INF = 1e9;
     int n = g.size();
     std::vector&lt;int&gt; dist(n, INF);
-    parent.assign(n, -1);
-
-    std::priority_queue&lt;std::pair&lt;int,int&gt;,
-                        std::vector&lt;std::pair&lt;int,int&gt;&gt;,
-                        std::greater&lt;std::pair&lt;int,int&gt;&gt;&gt; pq;
-
-    if (!blocked[start]) {
-        dist[start] = 0;
-        pq.push({0, start});
-    }
-
-    while (!pq.empty()) {
-        auto [d, u] = pq.top(); pq.pop();
-        if (d != dist[u]) continue;
-        for (auto [v, w] : g[u]) {
-            if (blocked[v]) continue;  // avoid fire zones
-            if (dist[v] &gt; d + w) {
-                dist[v] = d + w;
-                parent[v] = u;
-                pq.push({dist[v], v});
-            }
-        }
-    }
-    return dist;
-}</code></pre>
-
-        <h3>Application Logic</h3>
-        <p>
-            Smoke and temperature sensors mark certain nodes as “blocked” or unsafe. For each occupant location,
-            the system runs a modified Dijkstra algorithm that ignores blocked nodes and computes distances to all
-            exits. Parent pointers reconstruct the shortest safe path, which can be displayed on evacuation
-            screens or used to drive dynamic exit signboards and voice guidance.
-        </p>
-    </section>
-
-    <!-- 9. EV Charging Network with Reservation System -->
-    <section class="project" id="proj9">
-        <h2>9. EV Charging Network with Reservation System</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            EV users often arrive at charging stations to find all chargers occupied. Without proper reservation
-            and scheduling, this leads to long waiting times and queue chaos. The system must manage time slots
-            for each charging point and handle booking requests without conflict.
-        </p>
-
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>struct Slot {
-    long long startTime;  // reserved start (epoch)
-    long long endTime;    // reserved end
-};
-
-using StationSchedule = std::unordered_map&lt;int, std::vector&lt;Slot&gt;&gt;;
-// stationId -&gt; list of reserved slots
-
-bool isFree(
-    const std::vector&lt;Slot&gt; &slots,
-    long long s,
-    long long e
-) {
-    for (const auto &slot : slots) {
-        bool noOverlap = (e &lt;= slot.startTime) || (s &gt;= slot.endTime);
-        if (!noOverlap) return false;
-    }
-    return true;
-}
-
-bool reserveSlot(
-    StationSchedule &schedule,
-    int stationId,
-    long long desiredStart,
-    long long desiredEnd
-) {
-    auto &slots = schedule[stationId];
-    if (isFree(slots, desiredStart, desiredEnd)) {
-        slots.push_back({desiredStart, desiredEnd});
-        return true;  // reservation success
-    }
-    return false;     // conflict with existing
-}</code></pre>
-
-        <h3>Application Logic</h3>
-        <p>
-            When a user wants to book a charging slot, the app sends the desired time range to the server.
-            The server checks the station’s schedule to see if this interval overlaps with any existing
-            reservations. If free, the new slot is added and the user gets confirmation. Otherwise, the
-            system can suggest alternate time ranges or nearby stations with available slots.
-        </p>
-    </section>
-
-    <!-- 10. Smart School Campus Management System -->
-    <section class="project" id="proj10">
-        <h2>10. Smart School Campus Management System</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Schools handle attendance, classroom allocation, and timetable management manually, which is
-            time-consuming and error-prone. The system should centralise student records, automate attendance
-            logging, and map each class to suitable classrooms based on capacity.
-        </p>
-
-        <h3>Data Structures & C++ Algorithm Logic</h3>
-        <pre><code>struct Student {
-    int id;
-    std::string name;
-    int classId;
-};
-
-struct AttendanceRecord {
-    int studentId;
-    long long date; // can store as epoch or encoded yyyyMMdd
-    bool present;
-};
-
-struct ClassRoom {
-    int id;
-    int capacity;
-};
-
-using AttendanceMap =
-    std::unordered_map&lt;int, std::vector&lt;AttendanceRecord&gt;&gt;; // studentId -&gt; list
-
-void markAttendance(
-    AttendanceMap &attendance,
-    int studentId,
-    long long date,
-    bool present
-) {
-    attendance[studentId].push_back({studentId, date, present});
-}
-
-int allocateClassRoom(
-    int classStrength,
-    const std::vector&lt;ClassRoom&gt; &rooms
-) {
-    int chosen = -1;
-    int bestCap = INT_MAX;
-    for (const auto &r : rooms) {
-        if (r.capacity &gt;= classStrength && r.capacity &lt; bestCap) {
-            bestCap = r.capacity;
-            chosen = r.id;
-        }
-    }
-    return chosen; // -1 if no suitable room
-}</code></pre>
-
-        <h3>Application Logic</h3>
-        <p>
-            When classes start each day, teachers mark attendance through a tablet interface, and records
-            are stored in the system. Class strength is calculated from the student list, and the allocation
-            function chooses the smallest classroom that can hold that class. This mapping can be used to
-            generate a daily timetable, classroom schedule, and attendance reports, simplifying management
-            for administrators and teachers.
-        </p>
-    </section>
-
-</div>
-    <div style="text-align: center; margin: 25px 0;">
-    <a href="index.html"
-       style="
-           display: inline-block;
-           padding: 12px 22px;
-           background: #1a237e;
-           color: #fff;
-           border-radius: 6px;
-           text-decoration: none;
-           font-size: 15px;
-           font-weight: bold;
-       ">
-        ← Back to Home
-    </a>
-</div>
-
-
-<footer>
-    shreyas· C++ Algorithmic Design · Generated Template
-</footer>
-
-</body>
-</html>
-
+    parent.assign(n, -1
