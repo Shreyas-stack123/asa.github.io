@@ -1185,28 +1185,4 @@ window.addEventListener('scroll', ()=>{
 </script>
 </body>
 </html>
-        <section class="project" id="proj8">
-            <h2>8. Intelligent Building Fire Safety System</h2>
-
-            <h3>Problem Statement</h3>
-            <p>
-                In multi-storey smart buildings, fire or smoke in certain corridors can block exits and confuse
-                occupants. The system must detect fire-affected nodes and compute safe, shortest evacuation paths
-                that avoid hazardous zones.
-            </p>
-
-            <h3>Data Structures & C++ Algorithm Logic</h3>
-            <pre><code>// Graph representation for building: node = room/corridor/junction
-using BuildingGraph = std::vector&lt;std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;
-// building[u] = list of (v, distance)
-
-std::vector&lt;int&gt; dijkstraSafe(
-    int start,
-    const BuildingGraph &g,
-    const std::vector&lt;bool&gt; &blocked,
-    std::vector&lt;int&gt; &parent
-) {
-    const int INF = 1e9;
-    int n = g.size();
-    std::vector&lt;int&gt; dist(n, INF);
-    parent.assign(n, -1
+ 
