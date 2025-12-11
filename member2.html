@@ -15,8 +15,31 @@
             --accent-glow:rgba(0,212,255,0.18);
             --border:rgba(255,255,255,0.06);
             --shadow:rgba(0,0,0,0.5);
+
+            /* SDG button colors */
+            --sdg-bg: rgba(255,255,255,0.04);
+            --sdg-border: rgba(255,255,255,0.06);
+            --sdg-text: var(--text-primary);
+            --sdg-hover: rgba(0,212,255,0.08);
         }
-        body.light-mode{ --bg-primary:#f0f2f5; --bg-secondary:#ffffff; --bg-card:#ffffff; --text-primary:#1c1e21; --text-secondary:#606770; --accent:#0066ff; --accent-glow:rgba(0,102,255,0.12); --border:rgba(0,0,0,0.08); --shadow:rgba(0,0,0,0.08); }
+
+        /* light mode overrides */
+        body.light-mode{
+            --bg-primary:#f0f2f5;
+            --bg-secondary:#ffffff;
+            --bg-card:#ffffff;
+            --text-primary:#1c1e21;
+            --text-secondary:#606770;
+            --accent:#0066ff;
+            --accent-glow:rgba(0,102,255,0.12);
+            --border:rgba(0,0,0,0.08);
+            --shadow:rgba(0,0,0,0.08);
+
+            --sdg-bg: rgba(0,0,0,0.03);
+            --sdg-border: rgba(0,0,0,0.06);
+            --sdg-text: var(--text-primary);
+            --sdg-hover: rgba(0,102,255,0.03);
+        }
 
         *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
         html{scroll-behavior:smooth}
@@ -54,10 +77,32 @@
 
         .back-button{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#00a8cc);color:#00121a;text-decoration:none;font-weight:700;margin:28px 0;box-shadow:0 10px 30px var(--accent-glow)}
 
+        /* SDG button styles (inserted) */
+        .sdg-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
+        .sdg-btn{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:6px 10px;
+            border-radius:999px;
+            background:var(--sdg-bg);
+            color:var(--sdg-text);
+            font-size:13px;
+            font-weight:700;
+            border:1px solid var(--sdg-border);
+            box-shadow:0 6px 18px rgba(0,0,0,0.06);
+            cursor:default;               /* not interactive */
+            user-select:none;
+            transition:transform .12s,background .12s,box-shadow .12s;
+        }
+        .sdg-btn:hover{background:var(--sdg-hover);transform:translateY(-2px)}
+        .sdg-badge{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:11px;font-weight:800;background:linear-gradient(180deg,var(--accent),#00a8cc);color:#00121a}
+        .sdg-label{font-weight:700;color:var(--text-primary);opacity:0.95}
+        .sdg-desc{display:block;font-size:12px;color:var(--text-secondary);margin-top:6px}
+
         footer{text-align:center;padding:36px 18px;color:var(--text-secondary);border-top:1px solid var(--border);margin-top:40px}
 
-        @media (max-width:768px){header{padding:36px 16px}.project{padding:18px}.container{padding:0 14px}}
-
+        @media (max-width:768px){header{padding:36px 16px}.project{padding:18px}.container{padding:0 14px} .sdg-list{gap:6px}}
         ::selection{background:var(--accent);color:#001}
     </style>
 </head>
@@ -65,7 +110,7 @@
     <div class="bg-animation" aria-hidden="true"></div>
     <div class="progress-bar" id="progressBar"></div>
 
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button">
         <span id="themeIcon">🌙</span>
         <span style="font-size:13px">Theme</span>
     </button>
@@ -77,13 +122,28 @@
 
     <main class="container">
 
-        <!-- keep original project markup and content; styles applied globally -->
-
         <!-- 1 -->
         <section class="project" id="proj1">
             <h2>1. Smart Metro–Bus Sync System</h2>
             <h3>Problem Statement</h3>
             <p>Improve first/last-mile connectivity and reduce transfer wait times by synchronizing bus departures with metro arrival schedules while respecting bus route constraints and passenger loads.</p>
+
+            <!-- SDG buttons inserted -->
+            <div class="sdg-list" aria-hidden="false">
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>// schedule per vehicle
 struct Schedule {
@@ -112,6 +172,27 @@ long long computeSyncDelay(long long busDepart, long long metroArrival, long lon
             <h2>2. Waste-to-Energy Conversion Plant</h2>
             <h3>Problem Statement</h3>
             <p>Convert municipal solid waste into usable energy while optimising throughput, feedstock mix, and emissions control. The system must schedule feed rates, monitor boiler conditions and maintain balance between energy output and pollution constraints.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 7 — Affordable and Clean Energy">
+                    <span class="sdg-badge">7</span>
+                    <span class="sdg-label">SDG 7</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 12 — Responsible Consumption and Production">
+                    <span class="sdg-badge">12</span>
+                    <span class="sdg-label">SDG 12</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct FeedBatch {
     int batchId;
@@ -144,6 +225,23 @@ int selectNextBatch(const std::vector&lt;FeedBatch&gt;&amp; queue, double desire
             <h2>3. Citywide Water Quality &amp; Leak Detection Network</h2>
             <h3>Problem Statement</h3>
             <p>Monitor water quality parameters and detect leaks by analysing pressure anomalies and flow inconsistencies across the distribution network so that contaminated zones and leaks can be isolated quickly.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 6 — Clean Water and Sanitation">
+                    <span class="sdg-badge">6</span>
+                    <span class="sdg-label">SDG 6</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct QualityReading {
     int sensorId;
@@ -173,6 +271,23 @@ bool detectLeak(double upstreamP, double downstreamP, double threshold) {
             <h2>4. Solar-Powered Smart Parking Hub</h2>
             <h3>Problem Statement</h3>
             <p>A parking facility powered by rooftop solar must balance charging demand, lighting, and EV charging schedules against available solar generation and battery storage to maximize self-consumption and avoid grid peaks.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 7 — Affordable and Clean Energy">
+                    <span class="sdg-badge">7</span>
+                    <span class="sdg-label">SDG 7</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct SolarState { double instantKW; double todayKWh; };
 struct Battery { double soc; double capacityKWh; };
@@ -193,6 +308,23 @@ double scheduleCharge(const SolarState &solar, Battery &bat, const EVRequest &ev
             <h2>5. Autonomous Drone Delivery Service</h2>
             <h3>Problem Statement</h3>
             <p>Plan efficient delivery routes for multiple drones with payload, battery constraints, no-fly zones and dynamic orders, while ensuring safe separation and timely deliveries.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct Drone { int id; double soc; double maxPayloadKg; };
 struct Order { int id; double x,y; double weight; long long deadline; };
@@ -223,6 +355,23 @@ int assignOrder(const std::vector&lt;Drone&gt;&amp; drones, const Order &o) {
             <h2>6. Smart Agriculture &amp; Crop Advisory Center</h2>
             <h3>Problem Statement</h3>
             <p>Provide field-level advisory to farmers by analysing soil moisture, weather forecasts and crop models to recommend irrigation, fertiliser and pest control actions.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 2 — Zero Hunger">
+                    <span class="sdg-badge">2</span>
+                    <span class="sdg-label">SDG 2</span>
+                </div>
+                <div class="sdg-btn" title="SDG 12 — Responsible Consumption and Production">
+                    <span class="sdg-badge">12</span>
+                    <span class="sdg-label">SDG 12</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct Field {
     int id;
@@ -252,6 +401,23 @@ Advice generateAdvice(const Field &f, double forecastRainMm) {
             <h2>7. Emergency Response &amp; Ambulance Routing System</h2>
             <h3>Problem Statement</h3>
             <p>Dispatch the nearest appropriate ambulance to incident sites while computing fastest routes that account for live traffic, road blocks and hospital availability.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 3 — Good Health and Well-Being">
+                    <span class="sdg-badge">3</span>
+                    <span class="sdg-label">SDG 3</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct Ambulance { int id; int node; bool available; int capacity; };
 struct Incident { int id; int node; int priority; };
@@ -274,6 +440,23 @@ int selectAmbulance(const std::vector&lt;Ambulance&gt;&amp; ambulances, int inci
             <h2>8. Eco-Brick Sustainable Construction Unit</h2>
             <h3>Problem Statement</h3>
             <p>Convert non-recyclable plastic waste into compressed bricks for construction. The system must monitor input material mix, compression cycles and quality checks to ensure bricks meet strength standards.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 12 — Responsible Consumption and Production">
+                    <span class="sdg-badge">12</span>
+                    <span class="sdg-label">SDG 12</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct Feedstock { int id; double plasticKg; double contaminationPct; };
 struct BrickBatch { int id; int count; double avgStrength; };
@@ -296,6 +479,27 @@ double predictStrength(const std::vector&lt;Feedstock&gt;&amp; batch) {
             <h2>9. Electric Ferry &amp; Smart Marina Services</h2>
             <h3>Problem Statement</h3>
             <p>Manage scheduling and charging for an electric ferry fleet while coordinating berth allocation and tidal/safety constraints to maintain service frequency.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 7 — Affordable and Clean Energy">
+                    <span class="sdg-badge">7</span>
+                    <span class="sdg-label">SDG 7</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct Ferry { int id; double soc; int berthId; bool available; };
 struct Route { int id; int fromBerth; int toBerth; int durationMin; };
@@ -316,6 +520,27 @@ int scheduleFerry(const std::vector&lt;Ferry&gt;&amp; ferries, const Route &r) {
             <h2>10. Renewable Energy Microgrid Management</h2>
             <h3>Problem Statement</h3>
             <p>Coordinate multiple distributed renewable sources (PV, wind), storage and flexible loads in a microgrid to meet local demand and minimize grid import while respecting stability and reserve constraints.</p>
+
+            <!-- SDG buttons -->
+            <div class="sdg-list">
+                <div class="sdg-btn" title="SDG 7 — Affordable and Clean Energy">
+                    <span class="sdg-badge">7</span>
+                    <span class="sdg-label">SDG 7</span>
+                </div>
+                <div class="sdg-btn" title="SDG 9 — Industry, Innovation and Infrastructure">
+                    <span class="sdg-badge">9</span>
+                    <span class="sdg-label">SDG 9</span>
+                </div>
+                <div class="sdg-btn" title="SDG 11 — Sustainable Cities and Communities">
+                    <span class="sdg-badge">11</span>
+                    <span class="sdg-label">SDG 11</span>
+                </div>
+                <div class="sdg-btn" title="SDG 13 — Climate Action">
+                    <span class="sdg-badge">13</span>
+                    <span class="sdg-label">SDG 13</span>
+                </div>
+            </div>
+
             <h3>Data Structures & C++ Algorithm Logic</h3>
             <pre><code>struct Generator { int id; double maxKW; double currentKW; bool dispatchable; };
 struct Load { int id; double demandKW; bool flexible; };
@@ -342,7 +567,7 @@ double computeNetBalance(const std::vector&lt;Generator&gt;&amp; gens, const std
     </footer>
 
 <script>
-// theme toggle with persistence
+/* theme toggle with persistence */
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
 function setTheme(isLight){
@@ -354,9 +579,9 @@ themeToggle.addEventListener('click', ()=> setTheme(!document.body.classList.con
 // initialize
 setTheme(localStorage.getItem('shreyas_theme_light') === '1');
 
-// progress bar
+/* progress bar */
 const progressBar = document.getElementById('progressBar');
-window.addEventListener('scroll', ()=>{
+window.addEventListener('scroll', ()=> {
     const doc = document.documentElement;
     const scrolled = (doc.scrollTop) / (doc.scrollHeight - doc.clientHeight);
     progressBar.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
