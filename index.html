@@ -105,23 +105,17 @@
       border:1px solid var(--border);
     }
 
-    /* hero (now visually present but empty to preserve spacing) */
+    /* hero (kept minimal spacer) */
     .hero{
       display:flex; align-items:center; justify-content:center; text-align:center;
       padding:56px 20px; position:relative; overflow:hidden;
       background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
       border-bottom:1px solid var(--border);
-      min-height:48px; /* small spacer since content removed per request */
+      min-height:48px;
     }
 
     .hero-overlay{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent); pointer-events:none }
     .hero-content{ max-width:900px; z-index:1 }
-
-    .cta-button{
-      display:inline-block; padding:12px 22px; border-radius:999px; text-decoration:none;
-      background: linear-gradient(90deg,var(--accent),#00a8cc); color:#00121a; font-weight:700;
-      box-shadow:0 10px 30px var(--accent-glow);
-    }
 
     /* container */
     .container{ max-width:var(--max-width); margin:36px auto; padding:0 20px 60px }
@@ -129,10 +123,70 @@
     /* section title */
     .section-title{ font-size:20px; color:var(--text-primary); margin-bottom:12px; font-weight:700 }
 
-    /* ASA section */
-    .asa-section{ text-align:center; padding:28px 20px; }
-    .asa-title{ font-size:28px; color:var(--accent); font-weight:800; margin-bottom:4px }
-    .asa-subtitle{ color:var(--text-secondary); margin-bottom:12px }
+    /* === ASA section (modified for large centered glowing ASA) === */
+    .asa-section{
+      text-align:center;
+      padding:40px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    /* Make ASA very large, centered, animated glow */
+    .asa-title{
+      font-size: clamp(48px, 10vw, 120px);
+      line-height: 0.9;
+      margin: 0;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow:
+        0 8px 30px rgba(0,212,255,0.06),
+        0 2px 12px rgba(0,212,255,0.08);
+      filter: drop-shadow(0 6px 30px rgba(0,212,255,0.08));
+      animation: glowPulse 2.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes glowPulse {
+      0% {
+        text-shadow:
+          0 6px 20px rgba(0,212,255,0.06),
+          0 2px 8px rgba(0,212,255,0.06);
+        transform: translateY(0);
+        opacity: 0.95;
+      }
+      50% {
+        text-shadow:
+          0 18px 60px rgba(0,212,255,0.14),
+          0 6px 20px rgba(0,212,255,0.12);
+        transform: translateY(-6px);
+        opacity: 1;
+      }
+      100% {
+        text-shadow:
+          0 6px 20px rgba(0,212,255,0.06),
+          0 2px 8px rgba(0,212,255,0.06);
+        transform: translateY(0);
+        opacity: 0.95;
+      }
+    }
+
+    /* subtitle under ASA (kept smaller and centered) */
+    .asa-subtitle{
+      color:var(--text-secondary);
+      font-size: clamp(14px, 2vw, 18px);
+      margin-top: -6px;
+      text-align:center;
+      max-width: 900px;
+    }
+
     .city-layout-btn{
       display:inline-block; margin-top:8px; padding:10px 18px; border-radius:999px;
       background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#00121a; font-weight:700;
@@ -183,6 +237,8 @@
       .hero{ padding:36px 16px }
       .team-grid{ grid-template-columns:1fr }
       .project-section, .course-section{ padding:0 8px }
+      /* scale ASA a bit on very small screens */
+      .asa-title{ font-size: clamp(36px, 12vw, 72px); }
     }
     ::selection{ background:var(--accent); color:#001 }
   </style>
@@ -212,19 +268,17 @@
     </div>
   </nav>
 
-  <!-- HERO (content removed per request) -->
+  <!-- HERO (kept spacer) -->
   <section class="hero" aria-label="Hero">
     <div class="hero-overlay" aria-hidden="true"></div>
-    <div class="hero-content" aria-hidden="true">
-      <!-- intentionally left empty (hero headline + CTA removed) -->
-    </div>
+    <div class="hero-content" aria-hidden="true"></div>
   </section>
 
   <main class="container" id="main">
 
     <!-- ASA SECTION -->
     <section class="asa-section" aria-labelledby="asa-heading">
-      <h2 id="asa-heading" class="asa-title">ASA</h2>
+      <h1 id="asa-heading" class="asa-title" aria-level="1">ASA</h1>
       <div class="asa-subtitle">Urban Design &amp; Smart City Studio Project</div>
       <a class="city-layout-btn" href="citylayout.html" aria-label="View City Layout">View City Layout</a>
     </section>
