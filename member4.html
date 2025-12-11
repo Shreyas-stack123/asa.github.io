@@ -2,105 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ATHARVA </title>
+    <title>ATHARVA - Smart City Projects (Styled)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
+        :root{
+            --bg-primary:#0a0e27;
+            --bg-secondary:#1a1f3a;
+            --bg-card:#252b48;
+            --text-primary:#e4e6eb;
+            --text-secondary:#b8bcc8;
+            --accent:#00d4ff;
+            --accent-glow:rgba(0,212,255,0.18);
+            --border:rgba(255,255,255,0.06);
+            --shadow:rgba(0,0,0,0.5);
         }
-        body {
-            background: #f5f5f5;
-            color: #222;
-            line-height: 1.6;
-        }
-        header {
-            background: #111;
-            color: #fff;
-            padding: 20px 10px;
-            text-align: center;
-        }
-        header h1 {
-            font-size: 26px;
-            margin-bottom: 5px;
-        }
-        header p {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 20px auto 40px;
-            padding: 0 15px;
-        }
-        .project {
-            background: #fff;
-            border-radius: 8px;
-            padding: 18px 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        }
-        .project h2 {
-            font-size: 20px;
-            margin-bottom: 8px;
-            color: #1a237e;
-        }
-        .project h3 {
-            font-size: 16px;
-            margin-top: 10px;
-            margin-bottom: 4px;
-            color: #333;
-        }
-        .project p {
-            font-size: 14px;
-            margin-bottom: 6px;
-            text-align: justify;
-        }
-        pre {
-            background: #111;
-            color: #eee;
-            padding: 10px 12px;
-            border-radius: 6px;
-            overflow-x: auto;
-            font-size: 13px;
-            margin: 6px 0 8px;
-        }
-        code {
-            font-family: Consolas, "Courier New", monospace;
-        }
-        footer {
-            text-align: center;
-            padding: 15px 10px 30px;
-            font-size: 12px;
-            color: #555;
-        }
+        body.light-mode{ --bg-primary:#f0f2f5; --bg-secondary:#ffffff; --bg-card:#ffffff; --text-primary:#1c1e21; --text-secondary:#606770; --accent:#0066ff; --accent-glow:rgba(0,102,255,0.12); --border:rgba(0,0,0,0.08); --shadow:rgba(0,0,0,0.08); }
+
+        *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;transition:background .25s,color .25s;overflow-x:hidden}
+
+        /* animated background */
+        .bg-animation{position:fixed;inset:0;z-index:-1;opacity:0.04;background:radial-gradient(circle at 15% 30%,var(--accent) 0%,transparent 40%),radial-gradient(circle at 85% 80%,var(--accent) 0%,transparent 40%);animation:bgPulse 14s ease-in-out infinite}
+        @keyframes bgPulse{0%,100%{opacity:0.03}50%{opacity:0.08}}
+
+        /* progress bar */
+        .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),#00ffaa);z-index:9999;width:0}
+
+        /* theme toggle */
+        .theme-toggle{position:fixed;top:18px;right:18px;z-index:1000;background:var(--bg-card);border:1px solid var(--border);padding:8px 14px;border-radius:999px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 8px 30px var(--shadow);transition:transform .18s}
+        .theme-toggle:hover{transform:scale(1.03)}
+        .theme-toggle span{font-weight:700}
+
+        header{background:linear-gradient(135deg,var(--bg-secondary),var(--bg-card));padding:56px 20px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 8px 40px var(--shadow)}
+        header h1{font-size:clamp(24px,4vw,44px);font-weight:800;margin-bottom:10px;background:linear-gradient(90deg,var(--accent),#00ffaa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        header p{color:var(--text-secondary);font-size:clamp(13px,1.6vw,16px)}
+
+        .container{max-width:1200px;margin:36px auto;padding:0 20px 80px}
+        .project{background:var(--bg-card);border-radius:14px;padding:28px;margin-bottom:26px;border:1px solid var(--border);box-shadow:0 12px 40px var(--shadow);position:relative;overflow:hidden;transition:transform .28s,box-shadow .28s,border-color: .28s}
+        .project:hover{transform:translateY(-8px);box-shadow:0 26px 60px var(--accent-glow);border-color:var(--accent)}
+        .project h2{color:var(--accent);font-size:clamp(18px,2.6vw,26px);margin-bottom:12px;font-weight:700;display:inline-block}
+        .project h2::after{content:'';display:block;height:3px;width:0;background:linear-gradient(90deg,var(--accent),#00ffaa);transition:width .35s}
+        .project:hover h2::after{width:100%}
+
+        .project h3{font-size:16px;margin-top:12px;margin-bottom:8px;color:var(--text-primary);font-weight:600;display:flex;align-items:center;gap:8px}
+        .project h3::before{content:'▸';color:var(--accent)}
+        .project p{color:var(--text-secondary);font-size:15px;text-align:justify;line-height:1.75;margin-bottom:12px}
+
+        pre{background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.2));color:var(--text-primary);padding:18px;border-radius:10px;overflow:auto;font-size:13px;border:1px solid var(--border);box-shadow:0 6px 20px rgba(0,0,0,0.25)}
+        pre::before{content:'C++';position:absolute;right:18px;top:14px;background:var(--accent);color:var(--bg-primary);padding:4px 10px;border-radius:6px;font-weight:700;font-size:11px}
+        code{font-family:Consolas,'Courier New',monospace;white-space:pre}
+
+        .back-button{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#00a8cc);color:#00121a;text-decoration:none;font-weight:700;margin:28px 0;box-shadow:0 10px 30px var(--accent-glow)}
+
+        footer{text-align:center;padding:36px 18px;color:var(--text-secondary);border-top:1px solid var(--border);margin-top:40px}
+
+        @media (max-width:768px){header{padding:36px 16px}.project{padding:18px}.container{padding:0 14px}}
+
+        ::selection{background:var(--accent);color:#001}
     </style>
 </head>
 <body>
+    <div class="bg-animation" aria-hidden="true"></div>
+    <div class="progress-bar" id="progressBar"></div>
 
-<header>
-    <h1>Smart City – DAA Mini Projects (Set 3)</h1>
-    <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use</p>
-</header>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon">🌙</span>
+        <span style="font-size:13px">Theme</span>
+    </button>
 
-<div class="container">
+    <header>
+        <h1>Smart City – DAA Mini Projects (Set 3)</h1>
+        <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use</p>
+    </header>
 
-    <!-- 1. Smart Fire Hydrant Monitoring Network -->
-    <section class="project" id="p21">
-        <h2>1. Smart Fire Hydrant Monitoring Network</h2>
+    <main class="container">
 
-        <h3>Problem Statement</h3>
-        <p>
-            Fire hydrants are critical during emergencies, but many remain unnoticed when damaged,
-            blocked, or having low water pressure. Manual inspection is slow and infrequent. The
-            system should continuously monitor hydrant health (pressure, flow, valve status), detect
-            issues and prepare priority lists for maintenance teams.
-        </p>
+        <!-- Paste each project section from user's original file, kept content intact but restyled -->
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Hydrant {
+        <!-- 1. Smart Fire Hydrant Monitoring Network -->
+        <section class="project" id="p21">
+            <h2>1. Smart Fire Hydrant Monitoring Network</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Fire hydrants are critical during emergencies, but many remain unnoticed when damaged,
+                blocked, or having low water pressure. Manual inspection is slow and infrequent. The
+                system should continuously monitor hydrant health (pressure, flow, valve status), detect
+                issues and prepare priority lists for maintenance teams.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Hydrant {
     int id;
     int zoneId;
     double pressure;        // bar
@@ -115,13 +108,13 @@ struct HydrantAlert {
 };
 
 std::vector&lt;HydrantAlert&gt; checkHydrants(
-    const std::vector&lt;Hydrant&gt; &hydrants,
+    const std::vector&lt;Hydrant&gt; &amp;hydrants,
     double minPressure,
     double minFlow
 ) {
     std::vector&lt;HydrantAlert&gt; alerts;
 
-    for (const auto &h : hydrants) {
+    for (const auto &amp;h : hydrants) {
         if (h.pressure &lt; minPressure) {
             alerts.push_back({h.id, "LOW_PRESSURE",
                               (minPressure - h.pressure)});
@@ -137,30 +130,30 @@ std::vector&lt;HydrantAlert&gt; checkHydrants(
     return alerts;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Each hydrant is equipped with sensors for pressure, flow and valve position. The control center
-            periodically runs the above checks and generates a list of alerts with severity. These alerts
-            are sorted and sent to maintenance teams so that the most critical hydrants (low pressure /
-            zero flow) are fixed first. During a fire, the fire department can also query the nearest
-            hydrants with confirmed healthy status.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Each hydrant is equipped with sensors for pressure, flow and valve position. The control center
+                periodically runs the above checks and generates a list of alerts with severity. These alerts
+                are sorted and sent to maintenance teams so that the most critical hydrants (low pressure /
+                zero flow) are fixed first. During a fire, the fire department can also query the nearest
+                hydrants with confirmed healthy status.
+            </p>
+        </section>
 
-    <!-- 2. Intelligent Noise Pollution Control System -->
-    <section class="project" id="p22">
-        <h2>2. Intelligent Noise Pollution Control System</h2>
+        <!-- 2. Intelligent Noise Pollution Control System -->
+        <section class="project" id="p22">
+            <h2>2. Intelligent Noise Pollution Control System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Urban noise from traffic, construction and commercial zones affects health and comfort,
-            especially near schools and hospitals. The system should monitor noise levels across
-            the city, identify hotspots and support actions like rerouting traffic or restricting
-            loud activities at sensitive times.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Urban noise from traffic, construction and commercial zones affects health and comfort,
+                especially near schools and hospitals. The system should monitor noise levels across
+                the city, identify hotspots and support actions like rerouting traffic or restricting
+                loud activities at sensitive times.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct NoiseReading {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct NoiseReading {
     int sensorId;
     int gridX, gridY;   // mapped cell in city grid
     double dB;          // decibels
@@ -169,9 +162,9 @@ std::vector&lt;HydrantAlert&gt; checkHydrants(
 using NoiseGrid = std::vector&lt;std::vector&lt;double&gt;&gt;; // average dB per cell
 
 void updateNoiseGrid(
-    NoiseGrid &grid,
-    const std::vector&lt;NoiseReading&gt; &readings,
-    std::vector&lt;int&gt; &hotCells,
+    NoiseGrid &amp;grid,
+    const std::vector&lt;NoiseReading&gt; &amp;readings,
+    std::vector&lt;int&gt; &amp;hotCells,
     double threshold
 ) {
     int rows = grid.size();
@@ -179,7 +172,7 @@ void updateNoiseGrid(
     std::vector&lt;std::vector&lt;int&gt;&gt; counts(rows, std::vector&lt;int&gt;(cols, 0));
 
     // accumulate values
-    for (const auto &r : readings) {
+    for (const auto &amp;r : readings) {
         if (r.gridX &lt; 0 || r.gridX &gt;= rows ||
             r.gridY &lt; 0 || r.gridY &gt;= cols) continue;
         grid[r.gridX][r.gridY] += r.dB;
@@ -199,28 +192,28 @@ void updateNoiseGrid(
     }
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Microphones across the city send sound level data, which are mapped to cells in a noise grid.
-            The algorithm averages these readings and marks cells above a defined dB threshold as hotspots.
-            Authorities can then implement traffic calming measures, install sound barriers, enforce time
-            limits on loud activities, or adjust signal timings to reduce noise near sensitive locations.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Microphones across the city send sound level data, which are mapped to cells in a noise grid.
+                The algorithm averages these readings and marks cells above a defined dB threshold as hotspots.
+                Authorities can then implement traffic calming measures, install sound barriers, enforce time
+                limits on loud activities, or adjust signal timings to reduce noise near sensitive locations.
+            </p>
+        </section>
 
-    <!-- 3. Smart Parking Reservation & Guidance Platform -->
-    <section class="project" id="p23">
-        <h2>3. Smart Parking Reservation &amp; Guidance Platform</h2>
+        <!-- 3. Smart Parking Reservation & Guidance Platform -->
+        <section class="project" id="p23">
+            <h2>3. Smart Parking Reservation &amp; Guidance Platform</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Drivers spend significant time searching for parking, causing congestion and frustration.
-            A smart system should allow advance booking of parking slots in lots and guide drivers
-            to the nearest available or reserved space, avoiding conflicts between multiple users.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Drivers spend significant time searching for parking, causing congestion and frustration.
+                A smart system should allow advance booking of parking slots in lots and guide drivers
+                to the nearest available or reserved space, avoiding conflicts between multiple users.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct ParkingSlot {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct ParkingSlot {
     int slotId;
     bool reserved;
     long long startTime;
@@ -234,7 +227,7 @@ struct ParkingLot {
 };
 
 bool isSlotFree(
-    const ParkingSlot &s,
+    const ParkingSlot &amp;s,
     long long desiredStart,
     long long desiredEnd
 ) {
@@ -244,11 +237,11 @@ bool isSlotFree(
 }
 
 bool reserveInLot(
-    ParkingLot &lot,
+    ParkingLot &amp;lot,
     long long desiredStart,
     long long desiredEnd
 ) {
-    for (auto &slot : lot.slots) {
+    for (auto &amp;slot : lot.slots) {
         if (isSlotFree(slot, desiredStart, desiredEnd)) {
             slot.reserved = true;
             slot.startTime = desiredStart;
@@ -259,29 +252,29 @@ bool reserveInLot(
     return false;         // no slot available
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Each parking lot maintains a list of slots and their reservation windows. When a driver requests
-            a booking for a particular time range, the system checks each slot for overlap with existing
-            reservations and allocates the first free one. Separately, the platform can use location and
-            occupancy data to guide non-reserved users to the closest lot with available slots, reducing
-            cruising time and improving overall parking efficiency.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Each parking lot maintains a list of slots and their reservation windows. When a driver requests
+                a booking for a particular time range, the system checks each slot for overlap with existing
+                reservations and allocates the first free one. Separately, the platform can use location and
+                occupancy data to guide non-reserved users to the closest lot with available slots, reducing
+                cruising time and improving overall parking efficiency.
+            </p>
+        </section>
 
-    <!-- 4. Citywide Digital Emergency Alert System -->
-    <section class="project" id="p24">
-        <h2>4. Citywide Digital Emergency Alert System</h2>
+        <!-- 4. Citywide Digital Emergency Alert System -->
+        <section class="project" id="p24">
+            <h2>4. Citywide Digital Emergency Alert System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            During disasters (floods, earthquakes, fires, chemical leaks), authorities need to quickly
-            send alerts to multiple regions. Traditional manual calls and announcements are slow.
-            The system must manage digital alerts, route them to relevant zones and avoid duplication.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                During disasters (floods, earthquakes, fires, chemical leaks), authorities need to quickly
+                send alerts to multiple regions. Traditional manual calls and announcements are slow.
+                The system must manage digital alerts, route them to relevant zones and avoid duplication.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Alert {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Alert {
     int id;
     int originZone;
     std::string type;      // "FLOOD", "FIRE", etc.
@@ -293,7 +286,7 @@ using ZoneGraph = std::vector&lt;std::vector&lt;int&gt;&gt;; // adjacency list
 // BFS to find all zones to notify from origin
 std::vector&lt;int&gt; getAlertZones(
     int origin,
-    const ZoneGraph &g
+    const ZoneGraph &amp;g
 ) {
     int n = g.size();
     std::vector&lt;bool&gt; visited(n, false);
@@ -316,29 +309,29 @@ std::vector&lt;int&gt; getAlertZones(
     return result;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            When an emergency is detected in a particular zone, an alert object is created with type and
-            severity. The zone graph encodes connectivity and communication paths between zones (e.g.,
-            neighbouring wards or districts). BFS is used to determine which zones should receive the alert,
-            and the message is pushed via SMS, apps, public display boards and sirens. The system keeps a
-            log of all alerts for post-incident analysis.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                When an emergency is detected in a particular zone, an alert object is created with type and
+                severity. The zone graph encodes connectivity and communication paths between zones (e.g.,
+                neighbouring wards or districts). BFS is used to determine which zones should receive the alert,
+                and the message is pushed via SMS, apps, public display boards and sirens. The system keeps a
+                log of all alerts for post-incident analysis.
+            </p>
+        </section>
 
-    <!-- 5. Automated Street Cleaning & Sweeping Robots -->
-    <section class="project" id="p25">
-        <h2>5. Automated Street Cleaning &amp; Sweeping Robots</h2>
+        <!-- 5. Automated Street Cleaning & Sweeping Robots -->
+        <section class="project" id="p25">
+            <h2>5. Automated Street Cleaning &amp; Sweeping Robots</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Manual street cleaning is labour-intensive and often inconsistent. Smart cities can deploy
-            small autonomous sweeping robots to cover all street segments. The system must plan paths
-            so that each road segment is cleaned with minimal repeated travel.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Manual street cleaning is labour-intensive and often inconsistent. Smart cities can deploy
+                small autonomous sweeping robots to cover all street segments. The system must plan paths
+                so that each road segment is cleaned with minimal repeated travel.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Edge {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Edge {
     int u, v;
     int length;
     bool cleaned;
@@ -348,13 +341,13 @@ using StreetGraph = std::vector&lt;std::vector&lt;int&gt;&gt;; // node -&gt; edg
 
 int findNextEdge(
     int currentNode,
-    const StreetGraph &g,
-    const std::vector&lt;Edge&gt; &edges
+    const StreetGraph &amp;g,
+    const std::vector&lt;Edge&gt; &amp;edges
 ) {
     int bestEdge = -1;
     int bestLen = 1e9;
     for (int ei : g[currentNode]) {
-        const auto &e = edges[ei];
+        const auto &amp;e = edges[ei];
         if (!e.cleaned && e.length &lt; bestLen) {
             bestLen = e.length;
             bestEdge = ei;
@@ -365,8 +358,8 @@ int findNextEdge(
 
 std::vector&lt;int&gt; planCleaningOrder(
     int startNode,
-    StreetGraph &g,
-    std::vector&lt;Edge&gt; &edges
+    StreetGraph &amp;g,
+    std::vector&lt;Edge&gt; &amp;edges
 ) {
     std::vector&lt;int&gt; path;
     int current = startNode;
@@ -382,30 +375,30 @@ std::vector&lt;int&gt; planCleaningOrder(
     return path;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            The road network is modelled as a graph where edges are street segments to be cleaned. Each
-            robot starts from a depot node and greedily selects the nearest uncleaned edge connected to
-            its current node. Over time, all edges are marked as cleaned. More advanced versions can
-            consider multiple robots, capacity (dust bin size), and battery limits, but this basic path
-            planner already demonstrates coverage of the network.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                The road network is modelled as a graph where edges are street segments to be cleaned. Each
+                robot starts from a depot node and greedily selects the nearest uncleaned edge connected to
+                its current node. Over time, all edges are marked as cleaned. More advanced versions can
+                consider multiple robots, capacity (dust bin size), and battery limits, but this basic path
+                planner already demonstrates coverage of the network.
+            </p>
+        </section>
 
-    <!-- 6. Smart Rainwater Harvesting & Usage Platform -->
-    <section class="project" id="p26">
-        <h2>6. Smart Rainwater Harvesting &amp; Usage Platform</h2>
+        <!-- 6. Smart Rainwater Harvesting & Usage Platform -->
+        <section class="project" id="p26">
+            <h2>6. Smart Rainwater Harvesting &amp; Usage Platform</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Cities receive large volumes of rainwater that often flows away unused or causes flooding.
-            Buildings with harvesting tanks and underground storage can reuse this water for non-potable
-            purposes. The system must monitor tank levels and control distribution to optimise usage
-            without overflow or shortages.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Cities receive large volumes of rainwater that often flows away unused or causes flooding.
+                Buildings with harvesting tanks and underground storage can reuse this water for non-potable
+                purposes. The system must monitor tank levels and control distribution to optimise usage
+                without overflow or shortages.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Tank {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Tank {
     int id;
     double capacity;      // in litres
     double level;         // current volume
@@ -417,18 +410,18 @@ struct Demand {
 };
 
 void distributeWater(
-    std::vector&lt;Tank&gt; &tanks,
-    std::vector&lt;Demand&gt; &demands
+    std::vector&lt;Tank&gt; &amp;tanks,
+    std::vector&lt;Demand&gt; &amp;demands
 ) {
     // simple greedy: from the fullest tank to meet demands
     std::sort(tanks.begin(), tanks.end(),
-              [](const Tank &a, const Tank &b) {
+              [](const Tank &amp;a, const Tank &amp;b) {
                   return a.level &gt; b.level;
               });
 
-    for (auto &d : demands) {
+    for (auto &amp;d : demands) {
         double remaining = d.required;
-        for (auto &t : tanks) {
+        for (auto &amp;t : tanks) {
             if (remaining &lt;= 0) break;
             if (t.level &lt;= 0) continue;
             double supply = std::min(t.level, remaining);
@@ -439,29 +432,29 @@ void distributeWater(
     }
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Each harvesting tank is equipped with level sensors. Buildings generate periodic water demands
-            for uses such as flushing, gardening or cleaning. The controller sorts tanks by fullness and
-            satisfies demands from the fullest tanks first, ensuring high utilisation and reduced overflow.
-            If total stored water is insufficient, the system can automatically switch certain loads back
-            to municipal supply and log the shortfall.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Each harvesting tank is equipped with level sensors. Buildings generate periodic water demands
+                for uses such as flushing, gardening or cleaning. The controller sorts tanks by fullness and
+                satisfies demands from the fullest tanks first, ensuring high utilisation and reduced overflow.
+                If total stored water is insufficient, the system can automatically switch certain loads back
+                to municipal supply and log the shortfall.
+            </p>
+        </section>
 
-    <!-- 7. Smart City Command Control Center -->
-    <section class="project" id="p27">
-        <h2>7. Smart City Command Control Center</h2>
+        <!-- 7. Smart City Command Control Center -->
+        <section class="project" id="p27">
+            <h2>7. Smart City Command Control Center</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Smart cities generate events from many subsystems (traffic, health, water, emergency, power).
-            A central command center must prioritise these events, present critical ones to operators,
-            and schedule responses efficiently. Handling them in simple FIFO order is not enough.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Smart cities generate events from many subsystems (traffic, health, water, emergency, power).
+                A central command center must prioritise these events, present critical ones to operators,
+                and schedule responses efficiently. Handling them in simple FIFO order is not enough.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct CityEvent {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct CityEvent {
     int id;
     std::string domain;    // "TRAFFIC", "FIRE", "WATER", ...
     int severity;          // 1–5
@@ -469,7 +462,7 @@ void distributeWater(
 };
 
 struct EventCmp {
-    bool operator()(const CityEvent &a, const CityEvent &b) const {
+    bool operator()(const CityEvent &amp;a, const CityEvent &amp;b) const {
         if (a.severity == b.severity)
             return a.timestamp &gt; b.timestamp; // earlier first
         return a.severity &lt; b.severity;       // max-heap by severity
@@ -481,38 +474,38 @@ using EventQueue =
                          std::vector&lt;CityEvent&gt;,
                          EventCmp&gt;;
 
-void addEvent(EventQueue &eq, const CityEvent &e) {
+void addEvent(EventQueue &amp;eq, const CityEvent &amp;e) {
     eq.push(e);
 }
 
-CityEvent getNextEvent(EventQueue &eq) {
+CityEvent getNextEvent(EventQueue &amp;eq) {
     CityEvent top = eq.top();
     eq.pop();
     return top;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Subsystems push events (accident, fire alarm, pipeline leak, etc.) into a central event queue
-            with severity and timestamps. The priority queue ensures that the most severe and oldest events
-            are shown to operators first. Resolved events are removed, while others remain in the queue.
-            Analytics can be run on historical event logs to improve city policies and emergency response.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Subsystems push events (accident, fire alarm, pipeline leak, etc.) into a central event queue
+                with severity and timestamps. The priority queue ensures that the most severe and oldest events
+                are shown to operators first. Resolved events are removed, while others remain in the queue.
+                Analytics can be run on historical event logs to improve city policies and emergency response.
+            </p>
+        </section>
 
-    <!-- 8. Intelligent Public Transport Ticketing System -->
-    <section class="project" id="p28">
-        <h2>8. Intelligent Public Transport Ticketing System</h2>
+        <!-- 8. Intelligent Public Transport Ticketing System -->
+        <section class="project" id="p28">
+            <h2>8. Intelligent Public Transport Ticketing System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Traditional bus or metro ticketing relies on fixed stages or manual tickets. Smart cards and
-            QR codes allow dynamic fare based on distance travelled or zones crossed. The system should
-            compute fares from tap-in and tap-out data using route/zone information.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Traditional bus or metro ticketing relies on fixed stages or manual tickets. Smart cards and
+                QR codes allow dynamic fare based on distance travelled or zones crossed. The system should
+                compute fares from tap-in and tap-out data using route/zone information.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>// Simple zone-based fare model
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>// Simple zone-based fare model
 struct ZoneFare {
     int fromZone;
     int toZone;
@@ -526,11 +519,11 @@ struct Trip {
 };
 
 double computeFare(
-    const Trip &trip,
-    const std::vector&lt;ZoneFare&gt; &table,
+    const Trip &amp;trip,
+    const std::vector&lt;ZoneFare&gt; &amp;table,
     double defaultFare
 ) {
-    for (const auto &zf : table) {
+    for (const auto &amp;zf : table) {
         if (zf.fromZone == trip.startZone &amp;&amp;
             zf.toZone   == trip.endZone) {
             return zf.fare;
@@ -539,28 +532,28 @@ double computeFare(
     return defaultFare; // fallback if exact pair not found
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Entry gates record a tap-in with card ID and zone, and exit gates record tap-out. The system
-            matches these to form a trip and uses the fare table to compute the correct charge based on
-            zones crossed. Fares are deducted from a prepaid balance or billed later. Usage data supports
-            demand analysis, dynamic pricing and optimisation of routes and schedules for public transport.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Entry gates record a tap-in with card ID and zone, and exit gates record tap-out. The system
+                matches these to form a trip and uses the fare table to compute the correct charge based on
+                zones crossed. Fares are deducted from a prepaid balance or billed later. Usage data supports
+                demand analysis, dynamic pricing and optimisation of routes and schedules for public transport.
+            </p>
+        </section>
 
-    <!-- 9. Smart Street Vendor & Stall Management Platform -->
-    <section class="project" id="p29">
-        <h2>9. Smart Street Vendor &amp; Stall Management Platform</h2>
+        <!-- 9. Smart Street Vendor & Stall Management Platform -->
+        <section class="project" id="p29">
+            <h2>9. Smart Street Vendor &amp; Stall Management Platform</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Street vendors often operate without clear allocation of spaces, causing conflicts, congestion,
-            and unfair distribution. A digital system should assign stalls based on vendor type, size, and
-            location constraints, ensuring fair and efficient use of public spaces.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Street vendors often operate without clear allocation of spaces, causing conflicts, congestion,
+                and unfair distribution. A digital system should assign stalls based on vendor type, size, and
+                location constraints, ensuring fair and efficient use of public spaces.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Stall {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Stall {
     int id;
     std::string category;   // "FOOD", "CLOTHES", etc.
     bool occupied;
@@ -572,17 +565,17 @@ struct Vendor {
 };
 
 int allocateStall(
-    const Vendor &v,
-    std::vector&lt;Stall&gt; &stalls
+    const Vendor &amp;v,
+    std::vector&lt;Stall&gt; &amp;stalls
 ) {
-    for (auto &s : stalls) {
+    for (auto &amp;s : stalls) {
         if (!s.occupied &amp;&amp; s.category == v.category) {
             s.occupied = true;
             return s.id;
         }
     }
     // if no exact match, allocate any free stall
-    for (auto &s : stalls) {
+    for (auto &amp;s : stalls) {
         if (!s.occupied) {
             s.occupied = true;
             return s.id;
@@ -591,29 +584,29 @@ int allocateStall(
     return -1; // no stall available
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Municipal authorities define stalls with categories (food zone, crafts, services, etc.).
-            When a vendor registers or renews a permit, the system automatically assigns the nearest
-            available stall matching the vendor’s category. If none are available, a generic free stall
-            is assigned or the vendor is waitlisted. This leads to more organised markets, reduced
-            conflict and easier enforcement of regulations.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Municipal authorities define stalls with categories (food zone, crafts, services, etc.).
+                When a vendor registers or renews a permit, the system automatically assigns the nearest
+                available stall matching the vendor’s category. If none are available, a generic free stall
+                is assigned or the vendor is waitlisted. This leads to more organised markets, reduced
+                conflict and easier enforcement of regulations.
+            </p>
+        </section>
 
-    <!-- 10. Urban Tree Health & Growth Monitoring System -->
-    <section class="project" id="p30">
-        <h2>10. Urban Tree Health &amp; Growth Monitoring System</h2>
+        <!-- 10. Urban Tree Health & Growth Monitoring System -->
+        <section class="project" id="p30">
+            <h2>10. Urban Tree Health &amp; Growth Monitoring System</h2>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Urban trees provide shade, carbon capture and biodiversity, but many suffer from neglect,
-            disease or water stress. Manual inspection cannot scale for thousands of trees. The system
-            should monitor health indicators and growth trends, and flag trees needing attention.
-        </p>
+            <h3>Problem Statement</h3>
+            <p>
+                Urban trees provide shade, carbon capture and biodiversity, but many suffer from neglect,
+                disease or water stress. Manual inspection cannot scale for thousands of trees. The system
+                should monitor health indicators and growth trends, and flag trees needing attention.
+            </p>
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct TreeRecord {
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct TreeRecord {
     int treeId;
     double height;         // current height (m)
     double trunkDiameter;  // cm
@@ -627,12 +620,12 @@ struct TreeAlert {
 };
 
 std::vector&lt;TreeAlert&gt; analyseTrees(
-    const std::vector&lt;TreeRecord&gt; &trees,
+    const std::vector&lt;TreeRecord&gt; &amp;trees,
     double minMoisture,
     double maxMoisture
 ) {
     std::vector&lt;TreeAlert&gt; alerts;
-    for (const auto &t : trees) {
+    for (const auto &amp;t : trees) {
         if (t.moisture &lt; minMoisture) {
             alerts.push_back({t.treeId, "LOW_MOISTURE"});
         } else if (t.moisture &gt; maxMoisture) {
@@ -645,38 +638,46 @@ std::vector&lt;TreeAlert&gt; analyseTrees(
     return alerts;
 }</code></pre>
 
-        <h3>Application Logic</h3>
-        <p>
-            Smart probes and periodic surveys record moisture, trunk diameter, height and pest presence
-            for each tree. Moisture levels outside the healthy band generate watering-related alerts,
-            while pest flags generate immediate maintenance tasks. Growth trends can be inferred from
-            repeated measurements over time, helping urban planners verify survival of planted saplings
-            and plan new green corridors effectively.
-        </p>
-    </section>
+            <h3>Application Logic</h3>
+            <p>
+                Smart probes and periodic surveys record moisture, trunk diameter, height and pest presence
+                for each tree. Moisture levels outside the healthy band generate watering-related alerts,
+                while pest flags generate immediate maintenance tasks. Growth trends can be inferred from
+                repeated measurements over time, helping urban planners verify survival of planted saplings
+                and plan new green corridors effectively.
+            </p>
+        </section>
 
-</div>
-    <div style="text-align: center; margin: 25px 0;">
-    <a href="index.html"
-       style="
-           display: inline-block;
-           padding: 12px 22px;
-           background: #1a237e;
-           color: #fff;
-           border-radius: 6px;
-           text-decoration: none;
-           font-size: 15px;
-           font-weight: bold;
-       ">
-        ← Back to Home
-    </a>
-</div>
+        <div style="text-align:center;margin-top:18px">
+            <a class="back-button" href="index.html">← Back to Home</a>
+        </div>
 
+    </main>
 
-<footer>
-    atharva· C++ Algorithmic Design · Generated Template
-</footer>
+    <footer>
+        atharva · C++ Algorithmic Design · Styled Template
+    </footer>
 
+<script>
+// theme toggle with persistence
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+function setTheme(isLight){
+    document.body.classList.toggle('light-mode', isLight);
+    themeIcon.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('shreyas_theme_light', isLight ? '1' : '0');
+}
+themeToggle.addEventListener('click', ()=> setTheme(!document.body.classList.contains('light-mode')));
+// initialize
+setTheme(localStorage.getItem('shreyas_theme_light') === '1');
+
+// progress bar
+const progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', ()=>{
+    const doc = document.documentElement;
+    const scrolled = (doc.scrollTop) / (doc.scrollHeight - doc.clientHeight);
+    progressBar.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
+});
+</script>
 </body>
 </html>
-
