@@ -2,44 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Smart City DAA Mini Projects – Set 4 (C++ Algorithm Logic)</title>
+    <title>SHREYAS - Smart City Projects — Set 4</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
-        body { background:#f5f7fb; color:#1c2330; line-height:1.6; }
-        header { background:#0b2545; color:#fff; padding:22px 12px; text-align:center; }
-        header h1 { font-size:24px; margin-bottom:6px; }
-        header p { font-size:13px; opacity:0.9; }
-        .container { max-width:1100px; margin:22px auto; padding:0 16px 60px; }
-        .project { background:#fff; border-radius:10px; padding:18px; margin-bottom:16px; box-shadow:0 6px 18px rgba(12,34,66,0.06); }
-        .project h2 { color:#0b3b72; font-size:18px; margin-bottom:8px; }
-        .project h3 { font-size:15px; margin-top:10px; margin-bottom:6px; color:#223a66; }
-        .project p { font-size:14px; margin-bottom:8px; text-align:justify; }
-        pre { background:#0f1724; color:#e6eef8; padding:10px 12px; border-radius:8px; overflow:auto; font-size:13px; margin-bottom:8px; }
-        code { font-family: Consolas, "Courier New", monospace; }
-        footer { text-align:center; padding:16px 12px; color:#5b6b80; font-size:13px; }
-        @media (max-width:640px) { header h1 { font-size:18px; } .project h2 { font-size:16px; } }
+        :root{
+            --bg-primary:#0a0e27;
+            --bg-secondary:#1a1f3a;
+            --bg-card:#252b48;
+            --text-primary:#e4e6eb;
+            --text-secondary:#b8bcc8;
+            --accent:#00d4ff;
+            --accent-glow:rgba(0,212,255,0.18);
+            --border:rgba(255,255,255,0.06);
+            --shadow:rgba(0,0,0,0.5);
+        }
+        body.light-mode{ --bg-primary:#f0f2f5; --bg-secondary:#ffffff; --bg-card:#ffffff; --text-primary:#1c1e21; --text-secondary:#606770; --accent:#0066ff; --accent-glow:rgba(0,102,255,0.12); --border:rgba(0,0,0,0.08); --shadow:rgba(0,0,0,0.08); }
+
+        *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;transition:background .25s,color .25s;overflow-x:hidden}
+
+        /* animated background */
+        .bg-animation{position:fixed;inset:0;z-index:-1;opacity:0.04;background:radial-gradient(circle at 15% 30%,var(--accent) 0%,transparent 40%),radial-gradient(circle at 85% 80%,var(--accent) 0%,transparent 40%);animation:bgPulse 14s ease-in-out infinite}
+        @keyframes bgPulse{0%,100%{opacity:0.03}50%{opacity:0.08}}
+
+        /* progress bar */
+        .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),#00ffaa);z-index:9999;width:0}
+
+        /* theme toggle */
+        .theme-toggle{position:fixed;top:18px;right:18px;z-index:1000;background:var(--bg-card);border:1px solid var(--border);padding:8px 14px;border-radius:999px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 8px 30px var(--shadow);transition:transform .18s}
+        .theme-toggle:hover{transform:scale(1.03)}
+        .theme-toggle span{font-weight:700}
+
+        header{background:linear-gradient(135deg,var(--bg-secondary),var(--bg-card));padding:56px 20px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 8px 40px var(--shadow)}
+        header h1{font-size:clamp(24px,4vw,44px);font-weight:800;margin-bottom:10px;background:linear-gradient(90deg,var(--accent),#00ffaa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        header p{color:var(--text-secondary);font-size:clamp(13px,1.6vw,16px)}
+
+        .container{max-width:1200px;margin:36px auto;padding:0 20px 80px}
+        .project{background:var(--bg-card);border-radius:14px;padding:28px;margin-bottom:26px;border:1px solid var(--border);box-shadow:0 12px 40px var(--shadow);position:relative;overflow:hidden;transition:transform .28s,box-shadow .28s;border-color:transparent}
+        .project:hover{transform:translateY(-8px);box-shadow:0 26px 60px var(--accent-glow);border-color:var(--accent)}
+        .project h2{color:var(--accent);font-size:clamp(18px,2.6vw,26px);margin-bottom:12px;font-weight:700;display:inline-block}
+        .project h2::after{content:'';display:block;height:3px;width:0;background:linear-gradient(90deg,var(--accent),#00ffaa);transition:width .35s}
+        .project:hover h2::after{width:100%}
+
+        .project h3{font-size:16px;margin-top:12px;margin-bottom:8px;color:var(--text-primary);font-weight:600;display:flex;align-items:center;gap:8px}
+        .project h3::before{content:'▸';color:var(--accent)}
+        .project p{color:var(--text-secondary);font-size:15px;text-align:justify;line-height:1.75;margin-bottom:12px}
+
+        pre{background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.2));color:var(--text-primary);padding:18px;border-radius:10px;overflow:auto;font-size:13px;border:1px solid var(--border);box-shadow:0 6px 20px rgba(0,0,0,0.25)}
+        code{font-family:Consolas,'Courier New',monospace}
+
+        .back-button{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#00a8cc);color:#00121a;text-decoration:none;font-weight:700;margin:28px 0;box-shadow:0 10px 30px var(--accent-glow)}
+
+        footer{text-align:center;padding:36px 18px;color:var(--text-secondary);border-top:1px solid var(--border);margin-top:40px}
+
+        @media (max-width:768px){header{padding:36px 16px}.project{padding:18px}.container{padding:0 14px}}
+
+        ::selection{background:var(--accent);color:#001}
     </style>
 </head>
 <body>
-<header>
-    <h1>Smart City – DAA Mini Projects (Set 4)</h1>
-    <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use (10 Projects)</p>
-</header>
+    <div class="bg-animation" aria-hidden="true"></div>
+    <div class="progress-bar" id="progressBar"></div>
 
-<div class="container">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon">🌙</span>
+        <span style="font-size:13px">Theme</span>
+    </button>
 
-    <!-- 1. Smart Metro–Bus Sync System -->
-    <section class="project" id="proj1">
-        <h2>1. Smart Metro–Bus Sync System</h2>
+    <header>
+        <h1>Smart City – DAA Mini Projects (Set 4)</h1>
+        <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use (10 Projects)</p>
+    </header>
 
-        <h3>Problem Statement</h3>
-        <p>
-            Improve first/last-mile connectivity and reduce transfer wait times by synchronizing bus departures with metro arrival schedules while respecting bus route constraints and passenger loads.
-        </p>
+    <main class="container">
 
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>// schedule per vehicle
+        <!-- keep original project markup and content; styles applied globally -->
+
+        <!-- 1 -->
+        <section class="project" id="proj1">
+            <h2>1. Smart Metro–Bus Sync System</h2>
+            <h3>Problem Statement</h3>
+            <p>Improve first/last-mile connectivity and reduce transfer wait times by synchronizing bus departures with metro arrival schedules while respecting bus route constraints and passenger loads.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>// schedule per vehicle
 struct Schedule {
     int vehicleId;
     long long arrivalTime;   // epoch
@@ -57,24 +103,17 @@ long long computeSyncDelay(long long busDepart, long long metroArrival, long lon
     long long delay = metroArrival - busDepart;
     return (delay &lt;= maxAllowDelay) ? delay : 0; // either wait or ignore
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Metro arrival predictions and real-time bus positions are streamed to a coordinator. For transfer hubs, the coordinator computes whether a small, allowed delay to bus departure will meaningfully reduce passenger wait. If acceptable, the bus's on-board controller receives a short delay instruction; otherwise schedules are unchanged. This reduces total transfer time while keeping bus punctuality targets.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Metro arrival predictions and real-time bus positions are streamed to a coordinator. For transfer hubs, the coordinator computes whether a small, allowed delay to bus departure will meaningfully reduce passenger wait. If acceptable, the bus's on-board controller receives a short delay instruction; otherwise schedules are unchanged. This reduces total transfer time while keeping bus punctuality targets.
-        </p>
-    </section>
-
-    <!-- 2. Waste-to-Energy Conversion Plant -->
-    <section class="project" id="proj2">
-        <h2>2. Waste-to-Energy Conversion Plant</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Convert municipal solid waste into usable energy while optimising throughput, feedstock mix, and emissions control. The system must schedule feed rates, monitor boiler conditions and maintain balance between energy output and pollution constraints.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct FeedBatch {
+        <!-- 2 -->
+        <section class="project" id="proj2">
+            <h2>2. Waste-to-Energy Conversion Plant</h2>
+            <h3>Problem Statement</h3>
+            <p>Convert municipal solid waste into usable energy while optimising throughput, feedstock mix, and emissions control. The system must schedule feed rates, monitor boiler conditions and maintain balance between energy output and pollution constraints.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct FeedBatch {
     int batchId;
     double massKg;
     double calorificValue; // kJ/kg
@@ -96,24 +135,17 @@ int selectNextBatch(const std::vector&lt;FeedBatch&gt;&amp; queue, double desire
     }
     return 0; // fallback
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Incoming waste is characterised (mass, CV). The controller selects batches to stabilise boiler temperature and meet power targets while minimizing emission spikes. Emission sensors feed back and trigger temporary feed reductions or additional scrubbing when thresholds approach limits.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Incoming waste is characterised (mass, CV). The controller selects batches to stabilise boiler temperature and meet power targets while minimizing emission spikes. Emission sensors feed back and trigger temporary feed reductions or additional scrubbing when thresholds approach limits.
-        </p>
-    </section>
-
-    <!-- 3. Citywide Water Quality & Leak Detection Network -->
-    <section class="project" id="proj3">
-        <h2>3. Citywide Water Quality &amp; Leak Detection Network</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Monitor water quality parameters and detect leaks by analysing pressure anomalies and flow inconsistencies across the distribution network so that contaminated zones and leaks can be isolated quickly.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct QualityReading {
+        <!-- 3 -->
+        <section class="project" id="proj3">
+            <h2>3. Citywide Water Quality &amp; Leak Detection Network</h2>
+            <h3>Problem Statement</h3>
+            <p>Monitor water quality parameters and detect leaks by analysing pressure anomalies and flow inconsistencies across the distribution network so that contaminated zones and leaks can be isolated quickly.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct QualityReading {
     int sensorId;
     int nodeId;
     double turbidity;
@@ -132,24 +164,17 @@ struct PressureReading {
 bool detectLeak(double upstreamP, double downstreamP, double threshold) {
     return (upstreamP - downstreamP) &gt;= threshold;
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Distributed sensors report quality and pressure. Quality alerts (turbidity/chlorine outside bounds) mark contamination zones; pressure anomalies across adjacent nodes indicate likely leaks. The system triangulates sensor data to isolate the affected pipe segment and dispatch repair teams, while routing clean supply from alternate valves.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Distributed sensors report quality and pressure. Quality alerts (turbidity/chlorine outside bounds) mark contamination zones; pressure anomalies across adjacent nodes indicate likely leaks. The system triangulates sensor data to isolate the affected pipe segment and dispatch repair teams, while routing clean supply from alternate valves.
-        </p>
-    </section>
-
-    <!-- 4. Solar-Powered Smart Parking Hub -->
-    <section class="project" id="proj4">
-        <h2>4. Solar-Powered Smart Parking Hub</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            A parking facility powered by rooftop solar must balance charging demand, lighting, and EV charging schedules against available solar generation and battery storage to maximize self-consumption and avoid grid peaks.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct SolarState { double instantKW; double todayKWh; };
+        <!-- 4 -->
+        <section class="project" id="proj4">
+            <h2>4. Solar-Powered Smart Parking Hub</h2>
+            <h3>Problem Statement</h3>
+            <p>A parking facility powered by rooftop solar must balance charging demand, lighting, and EV charging schedules against available solar generation and battery storage to maximize self-consumption and avoid grid peaks.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct SolarState { double instantKW; double todayKWh; };
 struct Battery { double soc; double capacityKWh; };
 
 struct EVRequest { int id; double requiredKWh; long long departBy; };
@@ -159,24 +184,17 @@ double scheduleCharge(const SolarState &solar, Battery &bat, const EVRequest &ev
     double allocate = std::min(available, ev.requiredKWh);
     return allocate; // kW to assign now
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Real-time solar production and battery state are used to create short-term charging schedules for EVs and power for hub services. When solar is abundant, charge EVs and top up battery; during shortfall use battery or grid with priority rules. This reduces grid draw and improves renewable utilization.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Real-time solar production and battery state are used to create short-term charging schedules for EVs and power for hub services. When solar is abundant, charge EVs and top up battery; during shortfall use battery or grid with priority rules. This reduces grid draw and improves renewable utilization.
-        </p>
-    </section>
-
-    <!-- 5. Autonomous Drone Delivery Service -->
-    <section class="project" id="proj5">
-        <h2>5. Autonomous Drone Delivery Service</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Plan efficient delivery routes for multiple drones with payload, battery constraints, no-fly zones and dynamic orders, while ensuring safe separation and timely deliveries.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Drone { int id; double soc; double maxPayloadKg; };
+        <!-- 5 -->
+        <section class="project" id="proj5">
+            <h2>5. Autonomous Drone Delivery Service</h2>
+            <h3>Problem Statement</h3>
+            <p>Plan efficient delivery routes for multiple drones with payload, battery constraints, no-fly zones and dynamic orders, while ensuring safe separation and timely deliveries.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct Drone { int id; double soc; double maxPayloadKg; };
 struct Order { int id; double x,y; double weight; long long deadline; };
 struct NoFlyZone { double x,y,radius; };
 
@@ -196,24 +214,17 @@ int assignOrder(const std::vector&lt;Drone&gt;&amp; drones, const Order &o) {
     }
     return best;
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Orders arrive and are matched to drones by capacity, battery and ETA constraints. Flight plans avoid no-fly zones and include return-to-base for recharge. Fleet manager updates assignments dynamically when new orders or unexpected battery drops occur.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Orders arrive and are matched to drones by capacity, battery and ETA constraints. Flight plans avoid no-fly zones and include return-to-base for recharge. Fleet manager updates assignments dynamically when new orders or unexpected battery drops occur.
-        </p>
-    </section>
-
-    <!-- 6. Smart Agriculture & Crop Advisory Center -->
-    <section class="project" id="proj6">
-        <h2>6. Smart Agriculture &amp; Crop Advisory Center</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Provide field-level advisory to farmers by analysing soil moisture, weather forecasts and crop models to recommend irrigation, fertiliser and pest control actions.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Field {
+        <!-- 6 -->
+        <section class="project" id="proj6">
+            <h2>6. Smart Agriculture &amp; Crop Advisory Center</h2>
+            <h3>Problem Statement</h3>
+            <p>Provide field-level advisory to farmers by analysing soil moisture, weather forecasts and crop models to recommend irrigation, fertiliser and pest control actions.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct Field {
     int id;
     double moisture;   // %
     double tempC;
@@ -232,24 +243,17 @@ Advice generateAdvice(const Field &f, double forecastRainMm) {
     if (f.moisture &gt; 80.0) return {f.id, "NO_ACTION"};
     return {f.id, "MONITOR"};
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Field sensors and weather feeds are combined to create per-field actions. The platform pushes advisories to farmers along with expected benefit and urgency. Historic data refines thresholds and customises recommendations per crop type.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Field sensors and weather feeds are combined to create per-field actions. The platform pushes advisories to farmers along with expected benefit and urgency. Historic data refines thresholds and customises recommendations per crop type.
-        </p>
-    </section>
-
-    <!-- 7. Emergency Response & Ambulance Routing System -->
-    <section class="project" id="proj7">
-        <h2>7. Emergency Response &amp; Ambulance Routing System</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Dispatch the nearest appropriate ambulance to incident sites while computing fastest routes that account for live traffic, road blocks and hospital availability.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Ambulance { int id; int node; bool available; int capacity; };
+        <!-- 7 -->
+        <section class="project" id="proj7">
+            <h2>7. Emergency Response &amp; Ambulance Routing System</h2>
+            <h3>Problem Statement</h3>
+            <p>Dispatch the nearest appropriate ambulance to incident sites while computing fastest routes that account for live traffic, road blocks and hospital availability.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct Ambulance { int id; int node; bool available; int capacity; };
 struct Incident { int id; int node; int priority; };
 
 int selectAmbulance(const std::vector&lt;Ambulance&gt;&amp; ambulances, int incidentNode, const Graph &g) {
@@ -261,24 +265,17 @@ int selectAmbulance(const std::vector&lt;Ambulance&gt;&amp; ambulances, int inci
     }
     return best;
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>On receiving an incident, the control centre runs shortest-path computations from all available ambulances and selects the fastest reaching unit. Simultaneously the system checks hospital wait times and suggests destination. Live updates allow rerouting in transit.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            On receiving an incident, the control centre runs shortest-path computations from all available ambulances and selects the fastest reaching unit. Simultaneously the system checks hospital wait times and suggests destination. Live updates allow rerouting in transit.
-        </p>
-    </section>
-
-    <!-- 8. Eco-Brick Sustainable Construction Unit -->
-    <section class="project" id="proj8">
-        <h2>8. Eco-Brick Sustainable Construction Unit</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Convert non-recyclable plastic waste into compressed bricks for construction. The system must monitor input material mix, compression cycles and quality checks to ensure bricks meet strength standards.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Feedstock { int id; double plasticKg; double contaminationPct; };
+        <!-- 8 -->
+        <section class="project" id="proj8">
+            <h2>8. Eco-Brick Sustainable Construction Unit</h2>
+            <h3>Problem Statement</h3>
+            <p>Convert non-recyclable plastic waste into compressed bricks for construction. The system must monitor input material mix, compression cycles and quality checks to ensure bricks meet strength standards.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct Feedstock { int id; double plasticKg; double contaminationPct; };
 struct BrickBatch { int id; int count; double avgStrength; };
 
 bool acceptFeedstock(const Feedstock &f, double maxContamination) {
@@ -290,24 +287,17 @@ double predictStrength(const std::vector&lt;Feedstock&gt;&amp; batch) {
     for (auto &f : batch) base -= f.contaminationPct * 0.05;
     return base;
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Incoming plastic loads are sampled; batches above contamination limits are rejected or pre-cleaned. Compression recipes are chosen based on material mix. Produced bricks are sampled for compressive strength; batches failing standards are rejected and recycled back.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Incoming plastic loads are sampled; batches above contamination limits are rejected or pre-cleaned. Compression recipes are chosen based on material mix. Produced bricks are sampled for compressive strength; batches failing standards are rejected and recycled back.
-        </p>
-    </section>
-
-    <!-- 9. Electric Ferry & Smart Marina Services -->
-    <section class="project" id="proj9">
-        <h2>9. Electric Ferry &amp; Smart Marina Services</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Manage scheduling and charging for an electric ferry fleet while coordinating berth allocation and tidal/safety constraints to maintain service frequency.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Ferry { int id; double soc; int berthId; bool available; };
+        <!-- 9 -->
+        <section class="project" id="proj9">
+            <h2>9. Electric Ferry &amp; Smart Marina Services</h2>
+            <h3>Problem Statement</h3>
+            <p>Manage scheduling and charging for an electric ferry fleet while coordinating berth allocation and tidal/safety constraints to maintain service frequency.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct Ferry { int id; double soc; int berthId; bool available; };
 struct Route { int id; int fromBerth; int toBerth; int durationMin; };
 
 int scheduleFerry(const std::vector&lt;Ferry&gt;&amp; ferries, const Route &r) {
@@ -315,25 +305,19 @@ int scheduleFerry(const std::vector&lt;Ferry&gt;&amp; ferries, const Route &r) {
         if (ferries[i].available && ferries[i].soc &gt; 20.0) return i;
     }
     return -1; // no ferry ready
-}</code></pre>
+}
+</code></pre>
+            <h3>Application Logic</h3>
+            <p>The marina system schedules ferries considering SOC, berth availability and trip duration. Between trips ferries are queued for fast-charging based on predicted arrival times. Passenger booking levels influence dispatch frequency.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            The marina system schedules ferries considering SOC, berth availability and trip duration. Between trips ferries are queued for fast-charging based on predicted arrival times. Passenger booking levels influence dispatch frequency.
-        </p>
-    </section>
-
-    <!-- 10. Renewable Energy Microgrid Management -->
-    <section class="project" id="proj10">
-        <h2>10. Renewable Energy Microgrid Management</h2>
-
-        <h3>Problem Statement</h3>
-        <p>
-            Coordinate multiple distributed renewable sources (PV, wind), storage and flexible loads in a microgrid to meet local demand and minimize grid import while respecting stability and reserve constraints.
-        </p>
-
-        <h3>Data Structures &amp; C++ Algorithm Logic</h3>
-        <pre><code>struct Generator { int id; double maxKW; double currentKW; bool dispatchable; };
+        <!-- 10 -->
+        <section class="project" id="proj10">
+            <h2>10. Renewable Energy Microgrid Management</h2>
+            <h3>Problem Statement</h3>
+            <p>Coordinate multiple distributed renewable sources (PV, wind), storage and flexible loads in a microgrid to meet local demand and minimize grid import while respecting stability and reserve constraints.</p>
+            <h3>Data Structures & C++ Algorithm Logic</h3>
+            <pre><code>struct Generator { int id; double maxKW; double currentKW; bool dispatchable; };
 struct Load { int id; double demandKW; bool flexible; };
 
 double computeNetBalance(const std::vector&lt;Generator&gt;&amp; gens, const std::vector&lt;Load&gt;&amp; loads, const Battery &batt) {
@@ -343,34 +327,40 @@ double computeNetBalance(const std::vector&lt;Generator&gt;&amp; gens, const std
     double balance = genSum + (batt.soc &gt; 0.1 ? batt.capacityKWh : 0.0) - loadSum;
     return balance; // positive -> surplus; negative -> deficit
 }</code></pre>
+            <h3>Application Logic</h3>
+            <p>Real-time telemetry from generators, storage and loads feeds a scheduler that adjusts dispatchable units and flexible loads. On surplus the scheduler charges batteries or exports to grid; on deficit it sheds or delays flexible loads and discharges storage to maintain reliability.</p>
+        </section>
 
-        <h3>Application Logic</h3>
-        <p>
-            Real-time telemetry from generators, storage and loads feeds a scheduler that adjusts dispatchable units and flexible loads. On surplus the scheduler charges batteries or exports to grid; on deficit it sheds or delays flexible loads and discharges storage to maintain reliability.
-        </p>
-    </section>
+        <div style="text-align:center;margin-top:18px">
+            <a class="back-button" href="index.html">← Back to Home</a>
+        </div>
 
-</div>
-    <div style="text-align: center; margin: 25px 0;">
-    <a href="index.html"
-       style="
-           display: inline-block;
-           padding: 12px 22px;
-           background: #1a237e;
-           color: #fff;
-           border-radius: 6px;
-           text-decoration: none;
-           font-size: 15px;
-           font-weight: bold;
-       ">
-        ← Back to Home
-    </a>
-</div>
+    </main>
 
+    <footer>
+        Smart City DAA Mini Projects – Set 4 · C++ Algorithmic Design · SHREYAS Template
+    </footer>
 
-<footer>
-    Smart City DAA Mini Projects – Set 4 · C++ Algorithmic Design · Generated Template
-</footer>
+<script>
+// theme toggle with persistence
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+function setTheme(isLight){
+    document.body.classList.toggle('light-mode', isLight);
+    themeIcon.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('shreyas_theme_light', isLight ? '1' : '0');
+}
+themeToggle.addEventListener('click', ()=> setTheme(!document.body.classList.contains('light-mode')));
+// initialize
+setTheme(localStorage.getItem('shreyas_theme_light') === '1');
+
+// progress bar
+const progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', ()=>{
+    const doc = document.documentElement;
+    const scrolled = (doc.scrollTop) / (doc.scrollHeight - doc.clientHeight);
+    progressBar.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
+});
+</script>
 </body>
 </html>
-
