@@ -6,55 +6,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        :root {
+            --bg-light: #f5f7fb;
+            --text-light: #1a1a1a;
+            --card-light: #ffffff;
+
+            --bg-dark: #0d1117;
+            --text-dark: #e6eef8;
+            --card-dark: #161b22;
+
+            --accent: #00d4ff;
+            --radius: 12px;
+        }
+
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
             margin: 0;
             padding: 0;
-            color: #1a1a1a;
+            font-family: Arial, Helvetica, sans-serif;
             line-height: 1.6;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.4s, color 0.4s;
         }
+
+        /* Dark Theme */
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Container */
         .container {
             max-width: 1100px;
             margin: auto;
             padding: 20px;
+            animation: fadeIn 0.7s ease-in-out;
         }
+
+        /* Headings */
         h1, h2 {
             text-align: center;
-            font-weight: 700;
-            margin: 30px 0 15px;
-            color: #0b3b72;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin: 40px 0 20px;
         }
+
+        /* Image Sections */
         .image-section {
             text-align: center;
             margin-bottom: 40px;
         }
+
         .image-section img {
-            width: 90%;
-            max-width: 700px;
-            border-radius: 10px;
-            margin: 10px 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 92%;
+            max-width: 750px;
+            border-radius: var(--radius);
+            margin: 12px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
         }
+
+        body.dark .image-section img {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        .image-section img:hover {
+            transform: scale(1.02);
+        }
+
+        /* About Section */
         .about-section {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
+            background: var(--card-light);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
             margin-top: 30px;
-            box-shadow: 0 5px 16px rgba(0,0,0,0.08);
+            transition: background 0.4s, box-shadow 0.4s;
         }
-        .about-section h2 {
-            margin-top: 0;
-            color: #0b3b72;
+
+        body.dark .about-section {
+            background: var(--card-dark);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
+
         .about-section p {
-            font-size: 15px;
             text-align: justify;
+            font-size: 16px;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Fade Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body>
+
+<button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
 
 <div class="container">
 
@@ -89,6 +155,12 @@
     </div>
 
 </div>
+
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle('dark');
+    }
+</script>
 
 </body>
 </html>
