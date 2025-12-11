@@ -481,6 +481,142 @@ void computeSignalPlan(
             </p>
         </section>
 
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>SHREYAS - Smart City Projects — Fire Safety (Completed)</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        :root{
+            --bg-primary:#0a0e27;
+            --bg-secondary:#1a1f3a;
+            --bg-card:#252b48;
+            --text-primary:#e4e6eb;
+            --text-secondary:#b8bcc8;
+            --accent:#00d4ff;
+            --accent-glow:rgba(0,212,255,0.18);
+            --border:rgba(255,255,255,0.06);
+            --shadow:rgba(0,0,0,0.5);
+        }
+        body.light-mode{ --bg-primary:#f0f2f5; --bg-secondary:#ffffff; --bg-card:#ffffff; --text-primary:#1c1e21; --text-secondary:#606770; --accent:#0066ff; --accent-glow:rgba(0,102,255,0.12); --border:rgba(0,0,0,0.08); --shadow:rgba(0,0,0,0.08); }
+
+        *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;transition:background .25s,color .25s;overflow-x:hidden}
+
+        .bg-animation{position:fixed;inset:0;z-index:-1;opacity:0.04;background:radial-gradient(circle at 15% 30%,var(--accent) 0%,transparent 40%),radial-gradient(circle at 85% 80%,var(--accent) 0%,transparent 40%);animation:bgPulse 14s ease-in-out infinite}
+        @keyframes bgPulse{0%,100%{opacity:0.03}50%{opacity:0.08}}
+
+        .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),#00ffaa);z-index:9999;width:0}
+
+        .theme-toggle{position:fixed;top:18px;right:18px;z-index:1000;background:var(--bg-card);border:1px solid var(--border);padding:8px 14px;border-radius:999px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 8px 30px var(--shadow);transition:transform .18s}
+        .theme-toggle:hover{transform:scale(1.03)}
+        .theme-toggle span{font-weight:700}
+
+        header{background:linear-gradient(135deg,var(--bg-secondary),var(--bg-card));padding:56px 20px;text-align:center;border-bottom:1px solid var(--border);box-shadow:0 8px 40px var(--shadow)}
+        header h1{font-size:clamp(24px,4vw,44px);font-weight:800;margin-bottom:10px;background:linear-gradient(90deg,var(--accent),#00ffaa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        header p{color:var(--text-secondary);font-size:clamp(13px,1.6vw,16px)}
+
+        .container{max-width:1200px;margin:36px auto;padding:0 20px 80px}
+        .project{background:var(--bg-card);border-radius:14px;padding:28px;margin-bottom:26px;border:1px solid var(--border);box-shadow:0 12px 40px var(--shadow);transition:transform .28s,box-shadow .28s,border-color .28s}
+        .project:hover{transform:translateY(-8px);box-shadow:0 26px 60px var(--accent-glow);border-color:var(--accent)}
+        .project h2{color:var(--accent);font-size:clamp(18px,2.6vw,26px);margin-bottom:12px;font-weight:700;display:inline-block}
+        .project h2::after{content:'';display:block;height:3px;width:0;background:linear-gradient(90deg,var(--accent),#00ffaa);transition:width .35s}
+        .project:hover h2::after{width:100%}
+
+        .project h3{font-size:17px;margin-top:12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;color:var(--text-primary);font-weight:600}
+        .project h3::before{content:'▸';color:var(--accent)}
+        .project p{color:var(--text-secondary);font-size:15px;text-align:justify;line-height:1.75;margin-bottom:12px}
+
+        pre{background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.2));color:var(--text-primary);padding:18px;border-radius:10px;overflow:auto;font-size:13px;border:1px solid var(--border);box-shadow:0 6px 20px rgba(0,0,0,0.25)}
+        code{font-family:Consolas,'Courier New',monospace}
+
+        .back-button{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#00a8cc);color:#00121a;text-decoration:none;font-weight:700;margin:28px 0;box-shadow:0 10px 30px var(--accent-glow)}
+
+        footer{text-align:center;padding:36px 18px;color:var(--text-secondary);border-top:1px solid var(--border);margin-top:40px}
+
+        @media (max-width:768px){ header{padding:36px 16px}.project{padding:18px}.container{padding:0 14px} }
+
+        ::selection{background:var(--accent);color:#001}
+    </style>
+</head>
+<body>
+    <div class="bg-animation" aria-hidden="true"></div>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon">🌙</span>
+        <span style="font-size:13px">Theme</span>
+    </button>
+
+    <header>
+        <h1>Smart City – DAA Mini Project Collection</h1>
+        <p>Problem Statement · Data Structures · C++ Algorithm Logic · Application Use</p>
+    </header>
+
+    <main class="container">
+        <!-- Example first several projects kept minimal for readability; you can duplicate sections similarly -->
+        <section class="project" id="proj1">
+            <h2>1. Smart Traffic Signal Optimization System</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Fixed-time traffic lights cause long queues on busy approaches and waste green time on empty roads.
+                The system should dynamically adjust signal timings at junctions based on real-time vehicle density
+                to minimize total waiting time and congestion.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>// Each junction and its incoming roads
+struct Intersection {
+    int id;
+    std::vector&lt;int&gt; incomingRoadIds;
+};
+
+// Live vehicle count for each road
+struct RoadLoad {
+    int roadId;
+    int vehicleCount;
+};
+
+// intersectionId -&gt; list of (roadId, greenTimeInSeconds)
+using SignalPlan = std::unordered_map&lt;int, std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;;
+
+// trafficMap: roadId -&gt; RoadLoad
+void computeSignalPlan(
+    const Intersection &inter,
+    const std::unordered_map&lt;int, RoadLoad&gt; &trafficMap,
+    int cycleTime,
+    int minGreen,
+    SignalPlan &plan
+) {
+    int total = 0;
+    for (int rid : inter.incomingRoadIds) {
+        auto it = trafficMap.find(rid);
+        int count = (it == trafficMap.end() ? 1 : std::max(it-&gt;second.vehicleCount, 1));
+        total += count;
+    }
+
+    std::vector&lt;std::pair&lt;int,int&gt;&gt; phases;
+    for (int rid : inter.incomingRoadIds) {
+        auto it = trafficMap.find(rid);
+        int count = (it == trafficMap.end() ? 1 : std::max(it-&gt;second.vehicleCount, 1));
+        double share = (double)count / total;
+        int green = std::max(minGreen, (int)(share * cycleTime));
+        phases.push_back({rid, green});
+    }
+    plan[inter.id] = phases;
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                Sensors or cameras count vehicles on each incoming road. For every cycle, the controller gathers these
+                counts and runs the above logic to compute green time for each approach. The updated signal plan is sent
+                to the junction controller, which changes phase durations accordingly, reducing average waiting time and
+                improving throughput at busy intersections.
+            </p>
+        </section>
         <section class="project" id="proj2">
             <h2>2. Smart Street Lighting Automation</h2>
 
@@ -811,6 +947,244 @@ double computeBill(double units, const std::vector&lt;TariffSlab&gt; &slabs) {
             </p>
         </section>
 
+
+        <!-- ... other project sections omitted for brevity; assume they are present similarly ... -->
+
+        <!-- Fire safety section with completed DijkstraSafe code -->
+        <section class="project" id="proj_fire">
+            <h2>8. Intelligent Building Fire Safety System</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                In multi-storey smart buildings, fire or smoke in certain corridors can block exits and confuse
+                occupants. The system must detect fire-affected nodes and compute safe, shortest evacuation paths
+                that avoid hazardous zones.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>// Graph representation for building: node = room/corridor/junction
+using BuildingGraph = std::vector&lt;std::vector&lt;std::pair&lt;int,int&gt;&gt;&gt;; // building[u] = list of (v, distance)
+
+// Dijkstra variant that avoids blocked (unsafe) nodes and returns distances + parent array
+std::vector&lt;int&gt; dijkstraSafe(
+    int start,
+    const BuildingGraph &g,
+    const std::vector&lt;bool&gt; &blocked,
+    std::vector&lt;int&gt; &parent
+) {
+    const int INF = 1e9;
+    int n = g.size();
+    std::vector&lt;int&gt; dist(n, INF);
+    parent.assign(n, -1);
+
+    // priority queue for (distance, node)
+    std::priority_queue&lt;
+        std::pair&lt;int,int&gt;,
+        std::vector&lt;std::pair&lt;int,int&gt;&gt;,
+        std::greater&lt;std::pair&lt;int,int&gt;&gt;
+    &gt; pq;
+
+    // If start is blocked (on fire / unsafe) we cannot start
+    if (start &lt; 0 || start &gt;= n || blocked[start]) return dist;
+
+    dist[start] = 0;
+    pq.push({0, start});
+
+    while (!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+
+        if (d != dist[u]) continue;
+        if (blocked[u]) continue; // skip unsafe node
+
+        for (auto &edge : g[u]) {
+            int v = edge.first;
+            int w = edge.second;
+            if (v &lt; 0 || v &gt;= n) continue;
+            if (blocked[v]) continue; // cannot traverse into unsafe node
+            if (dist[v] &gt; d + w) {
+                dist[v] = d + w;
+                parent[v] = u;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+
+    return dist;
+}
+
+// Optional: helper to reconstruct path from start to target using parent[]
+std::vector&lt;int&gt; buildPath(int target, const std::vector&lt;int&gt; &parent) {
+    std::vector&lt;int&gt; path;
+    for (int cur = target; cur != -1; cur = parent[cur]) {
+        path.push_back(cur);
+    }
+    std::reverse(path.begin(), path.end());
+    return path;
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                Sensors and detectors mark nodes/corridors as 'blocked' (unsafe) when fire/smoke is detected.
+                The `dijkstraSafe` routine computes shortest safe distances while ignoring blocked nodes.
+                Using `buildPath`, the system reconstructs an evacuation route that avoids hazardous segments.
+                The platform can present directions to occupants or feed route data to building management systems
+                and emergency teams.
+            </p>
+        </section>
+
+        <!-- 9. EV Charging Network with Reservation System -->
+        <section class="project" id="proj9">
+            <h2>9. EV Charging Network with Reservation System</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                EV users often arrive at charging stations to find all chargers occupied. Without proper reservation
+                and scheduling, this leads to long waiting times and queue chaos. The system must manage time slots
+                for each charging point and handle booking requests without conflict.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Slot {
+    long long startTime;  // reserved start (epoch)
+    long long endTime;    // reserved end
+};
+
+using StationSchedule = std::unordered_map&lt;int, std::vector&lt;Slot&gt;&gt;; // stationId -> list of reserved slots
+
+bool isFree(
+    const std::vector&lt;Slot&gt; &slots,
+    long long s,
+    long long e
+) {
+    for (const auto &slot : slots) {
+        // no overlap means new slot ends before existing starts OR starts after existing ends
+        bool noOverlap = (e &lt;= slot.startTime) || (s &gt;= slot.endTime);
+        if (!noOverlap) return false;
+    }
+    return true;
+}
+
+bool reserveSlot(
+    StationSchedule &schedule,
+    int stationId,
+    long long desiredStart,
+    long long desiredEnd
+) {
+    auto &slots = schedule[stationId];
+    if (isFree(slots, desiredStart, desiredEnd)) {
+        slots.push_back({desiredStart, desiredEnd});
+        return true;  // reservation success
+    }
+    return false;     // conflict with existing
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                When a user wants to book a charging slot, the app sends the desired time range to the server.
+                The server checks the station’s schedule to see if this interval overlaps with any existing
+                reservations. If free, the new slot is added and the user gets confirmation. Otherwise, the
+                system can suggest alternate time ranges or nearby stations with available slots.
+            </p>
+        </section>
+
+        <!-- 10. Smart School Campus Management System -->
+        <section class="project" id="proj10">
+            <h2>10. Smart School Campus Management System</h2>
+
+            <h3>Problem Statement</h3>
+            <p>
+                Schools handle attendance, classroom allocation, and timetable management manually, which is
+                time-consuming and error-prone. The system should centralise student records, automate attendance
+                logging, and map each class to suitable classrooms based on capacity.
+            </p>
+
+            <h3>Data Structures &amp; C++ Algorithm Logic</h3>
+            <pre><code>struct Student {
+    int id;
+    std::string name;
+    int classId;
+};
+
+struct AttendanceRecord {
+    int studentId;
+    long long date; // epoch or encoded yyyyMMdd
+    bool present;
+};
+
+struct ClassRoom {
+    int id;
+    int capacity;
+};
+
+using AttendanceMap = std::unordered_map&lt;int, std::vector&lt;AttendanceRecord&gt;&gt;; // studentId -> records
+
+void markAttendance(
+    AttendanceMap &attendance,
+    int studentId,
+    long long date,
+    bool present
+) {
+    attendance[studentId].push_back({studentId, date, present});
+}
+
+int allocateClassRoom(
+    int classStrength,
+    const std::vector&lt;ClassRoom&gt; &rooms
+) {
+    int chosen = -1;
+    int bestCap = INT_MAX;
+    for (const auto &r : rooms) {
+        if (r.capacity &gt;= classStrength && r.capacity &lt; bestCap) {
+            bestCap = r.capacity;
+            chosen = r.id;
+        }
+    }
+    return chosen; // -1 if no suitable room
+}</code></pre>
+
+            <h3>Application Logic</h3>
+            <p>
+                When classes start each day, teachers mark attendance through a tablet interface, and records
+                are stored in the system. Class strength is calculated from the student list, and the allocation
+                function chooses the smallest classroom that can hold that class. This mapping can be used to
+                generate a daily timetable, classroom schedule, and attendance reports, simplifying management
+                for administrators and teachers.
+            </p>
+        </section>
+
+        <div style="text-align:center;margin-top:18px">
+            <a class="back-button" href="index.html">← Back to Home</a>
+        </div>
+    </main>
+
+    <footer>
+        shreyas · C++ Algorithmic Design · SHREYAS Template
+    </footer>
+
+<script>
+// theme toggle with persistence
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+function setTheme(isLight){
+    document.body.classList.toggle('light-mode', isLight);
+    themeIcon.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('shreyas_theme_light', isLight ? '1' : '0');
+}
+themeToggle.addEventListener('click', ()=> setTheme(!document.body.classList.contains('light-mode')));
+// initialize
+setTheme(localStorage.getItem('shreyas_theme_light') === '1');
+
+// progress bar
+const progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', ()=>{
+    const doc = document.documentElement;
+    const scrolled = (doc.scrollTop) / (doc.scrollHeight - doc.clientHeight);
+    progressBar.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
+});
+</script>
+</body>
+</html>
         <section class="project" id="proj8">
             <h2>8. Intelligent Building Fire Safety System</h2>
 
